@@ -15,6 +15,7 @@
             <a href="#">Acasă</a>
             <a href="#">Produse</a>
             <a href="#">Contact</a>
+            <div class="cart">Coș: <span id="cart-count">0</span></div>
         </div>
     </nav>
 
@@ -24,52 +25,43 @@
         <p>Cele mai bune produse la un click distanță</p>
     </div>
 
+    <!-- Căutare produse -->
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Caută produse...">
+    </div>
+
     <!-- Container produse -->
     <div class="container">
-        <div class="products">
+        <div class="products" id="products">
             <div class="product-card">
                 <img src="https://via.placeholder.com/150" alt="Produs 1">
-                <h3>Produs 1</h3>
-                <p>Descriere scurtă</p>
-                <button>Adaugă în coș</button>
+                <h3>Telefon</h3>
+                <p>Smartphone modern</p>
+                <p class="price">1500 RON</p>
+                <button onclick="addToCart()">Adaugă în coș</button>
             </div>
             <div class="product-card">
                 <img src="https://via.placeholder.com/150" alt="Produs 2">
-                <h3>Produs 2</h3>
-                <p>Descriere scurtă</p>
-                <button>Adaugă în coș</button>
+                <h3>Laptop</h3>
+                <p>Laptop performant</p>
+                <p class="price">3500 RON</p>
+                <button onclick="addToCart()">Adaugă în coș</button>
             </div>
             <div class="product-card">
                 <img src="https://via.placeholder.com/150" alt="Produs 3">
-                <h3>Produs 3</h3>
-                <p>Descriere scurtă</p>
-                <button>Adaugă în coș</button>
+                <h3>Căști</h3>
+                <p>Căști wireless</p>
+                <p class="price">300 RON</p>
+                <button onclick="addToCart()">Adaugă în coș</button>
             </div>
             <div class="product-card">
                 <img src="https://via.placeholder.com/150" alt="Produs 4">
-                <h3>Produs 4</h3>
-                <p>Descriere scurtă</p>
-                <button>Adaugă în coș</button>
+                <h3>Ceas</h3>
+                <p>Smartwatch modern</p>
+                <p class="price">800 RON</p>
+                <button onclick="addToCart()">Adaugă în coș</button>
             </div>
             <div class="product-card">
                 <img src="https://via.placeholder.com/150" alt="Produs 5">
-                <h3>Produs 5</h3>
-                <p>Descriere scurtă</p>
-                <button>Adaugă în coș</button>
-            </div>
-            <div class="product-card">
-                <img src="https://via.placeholder.com/150" alt="Produs 6">
-                <h3>Produs 6</h3>
-                <p>Descriere scurtă</p>
-                <button>Adaugă în coș</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <footer>
-        &copy; 2025 Mini eMag | Toate drepturile rezervate
-    </footer>
-
-</body>
-          </html>
+                <h3>Tabletă</h3>
+                <p>Tabletă pentru
