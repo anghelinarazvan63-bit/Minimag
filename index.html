@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cumperi</title>
+<title>Mini eMag</title>
 <link rel="stylesheet" href="style.css">
 
-<!-- Firebase -->
+<!-- Firebase SDK compat -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -71,9 +71,7 @@
 
 <!-- Produse -->
 <div class="container">
-  <div class="products" id="products">
-    <!-- Produsele vor fi încărcate din Firestore -->
-  </div>
+  <div class="products" id="products"></div>
 </div>
 
 <!-- Coș -->
@@ -103,15 +101,14 @@
   const auth = firebase.auth();
   const db = firebase.firestore();
 
+  // Elemente DOM
   const userEmailSpan = document.getElementById('user-email');
   const logoutBtn = document.getElementById('logout-btn');
-
   const loginBtn = document.getElementById('login-btn');
   const registerBtn = document.getElementById('register-btn');
   const authEmail = document.getElementById('auth-email');
   const authPassword = document.getElementById('auth-password');
   const authMsg = document.getElementById('auth-msg');
-
   const addProductBtn = document.getElementById('add-product-btn');
   const productsDiv = document.getElementById('products');
 
@@ -121,7 +118,7 @@
     const password = authPassword.value.trim();
     if(email && password){
       auth.createUserWithEmailAndPassword(email, password)
-        .then(userCredential => authMsg.textContent = "Înregistrare reușită!")
+        .then(() => authMsg.textContent = "Înregistrare reușită!")
         .catch(error => authMsg.textContent = error.message);
     } else authMsg.textContent = "Completează toate câmpurile!";
   });
@@ -131,7 +128,7 @@
     const password = authPassword.value.trim();
     if(email && password){
       auth.signInWithEmailAndPassword(email, password)
-        .then(userCredential => authMsg.textContent = "Login reușit!")
+        .then(() => authMsg.textContent = "Login reușit!")
         .catch(error => authMsg.textContent = error.message);
     } else authMsg.textContent = "Completează toate câmpurile!";
   });
@@ -140,6 +137,7 @@
     auth.signOut().then(() => alert('Te-ai deconectat!'));
   });
 
+  // Stare autentificare
   auth.onAuthStateChanged(user => {
     if(user){
       document.querySelector('.auth-form').style.display = 'none';
@@ -213,4 +211,4 @@
 
 </script>
 </body>
-</html>
+  </html>
