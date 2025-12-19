@@ -19,3 +19,34 @@ searchInput.addEventListener('input', function() {
         }
     });
 });
+// Filtrare pe categorii
+const categoryFilter = document.getElementById('category-filter');
+categoryFilter.addEventListener('change', function() {
+    const category = categoryFilter.value;
+    const products = document.querySelectorAll('.product-card');
+    products.forEach(product => {
+        if(category === "All" || product.dataset.category === category) {
+            product.style.display = '';
+        } else {
+            product.style.display = 'none';
+        }
+    });
+});
+
+// Sortare după preț
+const sortFilter = document.getElementById('sort-filter');
+sortFilter.addEventListener('change', function() {
+    const productsContainer = document.getElementById('products');
+    const products = Array.from(productsContainer.children);
+    const sortType = sortFilter.value;
+
+    products.sort((a, b) => {
+        const priceA = parseInt(a.dataset.price);
+        const priceB = parseInt(b.dataset.price);
+        if(sortType === 'asc') return priceA - priceB;
+        if(sortType === 'desc') return priceB - priceA;
+        return 0;
+    });
+
+    products.forEach(product => productsContainer.appendChild(product));
+});
