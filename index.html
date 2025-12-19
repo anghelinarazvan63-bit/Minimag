@@ -7,33 +7,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
-
-    <!-- Formular autentificare -->
-    <div id="auth-container">
-        <input type="email" id="email" placeholder="Email">
-        <input type="password" id="password" placeholder="Parolă">
-        <button id="login-btn">Loghează-te</button>
-        <button id="signup-btn">Creează cont</button>
-        <button id="logout-btn" style="display:none;">Logout</button>
-    </div>
-
-    <!-- Formular adăugare produs -->
-    <div id="add-product-container" style="display:none;">
-        <input type="text" id="prod-title" placeholder="Titlu produs">
-        <textarea id="prod-desc" placeholder="Descriere produs"></textarea>
-        <input type="number" id="prod-price" placeholder="Preț">
-        <input type="text" id="prod-category" placeholder="Categorie">
-        <input type="file" id="prod-file" accept="image/*">
-        <button id="add-product-btn">Adaugă produs</button>
-        <button id="upgrade-btn">Devino Premium</button>
-    </div>
-
-    <!-- Navbar -->
+    <!-- NAVBAR -->
     <nav>
         <div class="logo">Mini eMag</div>
         <div class="nav-links">
@@ -47,13 +21,22 @@
         </div>
     </nav>
 
-    <!-- Banner -->
+    <!-- BANNER -->
     <div class="banner">
         <h1>Bine ai venit la MiniMag!</h1>
         <p>Cele mai bune produse la un click distanță</p>
     </div>
 
-    <!-- Căutare + filtre -->
+    <!-- LOGIN/SIGNUP -->
+    <div class="auth-container">
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Parolă">
+        <button onclick="signupUser()">Creează cont</button>
+        <button onclick="loginUser()">Loghează-te</button>
+        <button onclick="logoutUser()">Deloghează-te</button>
+    </div>
+
+    <!-- FILTRE -->
     <div class="filter-container">
         <input type="text" id="search" placeholder="Caută produse...">
         <select id="category-filter">
@@ -69,16 +52,17 @@
             <option value="asc">Preț crescător</option>
             <option value="desc">Preț descrescător</option>
         </select>
+        <button onclick="addProduct()">Adaugă produs</button>
     </div>
 
-    <!-- Produse -->
+    <!-- PRODUSE -->
     <div class="container">
         <div class="products" id="products">
-            <!-- Produsele se încarcă din Firestore -->
+            <!-- Produsele din Firebase vor apărea aici -->
         </div>
     </div>
 
-    <!-- Container coș -->
+    <!-- COȘ -->
     <div id="cart-container" class="cart-container" style="display:none;">
         <h2>Coșul tău</h2>
         <ul id="cart-items"></ul>
@@ -90,7 +74,7 @@
         &copy; 2025 Mini eMag | Toate drepturile rezervate
     </footer>
 
-    <!-- Script JS -->
-    <script src="script.js"></script>
+    <!-- FIREBASE -->
+    <script type="module" src="script.js"></script>
 </body>
-  </html>
+        </html>
