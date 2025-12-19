@@ -1,9 +1,38 @@
-let cartCount = 0;
+let cart = [];
 
-function addToCart() {
-    cartCount++;
-    document.getElementById('cart-count').innerText = cartCount;
+function addToCart(productName, price) {
+    cart.push({name: productName, price: price});
+    document.getElementById('cart-count').innerText = cart.length;
+    updateCartDisplay();
 }
+
+function updateCartDisplay() {
+    const cartItems = document.getElementById('cart-items');
+    cartItems.innerHTML = '';
+    let total = 0;
+    cart.forEach((item, index) => {
+        total += item.price;
+        cartItems.innerHTML += `<li>${item.name} - ${item.price} RON 
+        <button onclick="removeFromCart(${index})">X</button></li>`;
+    });
+    document.getElementById('cart-total').innerText = total;
+}
+
+function removeFromCart(index) {
+    cart.splice(index, 1);
+    document.getElementById('cart-count').innerText = cart.length;
+    updateCartDisplay();
+}
+
+// Buton Vezi coș
+document.getElementById('view-cart-btn').addEventListener('click', () => {
+    document.getElementById('cart-container').style.display = 'block';
+});
+
+// Buton Închide coș
+document.getElementById('close-cart').addEventListener('click', () => {
+    document.getElementById('cart-container').style.display = 'none';
+});
 
 // Căutare produse
 const searchInput = document.getElementById('search');
