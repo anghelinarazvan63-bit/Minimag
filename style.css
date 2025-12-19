@@ -22,7 +22,7 @@ nav {
 }
 
 nav .logo {
-    font-size: 24px;
+    font-size: 10px;
     font-weight: bold;
 }
 
@@ -34,7 +34,7 @@ nav .nav-links {
 nav .nav-links a {
     color: red;
     text-decoration: none;
-    margin-left: 20px;
+    margin-left: 10px;
     font-weight: bold;
 }
 
@@ -43,7 +43,7 @@ nav .nav-links a:hover {
 }
 
 nav .cart {
-    margin-left: 20px;
+    margin-left: 10px;
 }
 
 /* Banner */
@@ -56,7 +56,7 @@ nav .cart {
 }
 
 .banner h1 {
-    font-size: 36px;
+    font-size: 15px;
     margin-bottom: 10px;
 }
 
@@ -71,10 +71,10 @@ nav .cart {
 }
 
 .search-container input {
-    width: 300px;
+    width: 150px;
     padding: 10px;
     border-radius: 5px;
-    border: 1px solid #ccc;
+    border: 2px solid #ccc;
 }
 
 /* Container produse */
@@ -87,7 +87,7 @@ nav .cart {
 /* Grid produse */
 .products {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(150px, 2fr));
     gap: 10px;
 }
 
