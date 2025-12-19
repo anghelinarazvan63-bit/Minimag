@@ -28,32 +28,59 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 // ========================
+// PRODUSE DEMO
+// ========================
+const demoProducts = [
+  {title: "Telefon Galaxy S23", description: "Telefon performant cu cameră excelentă", price: 4500, image: "https://source.unsplash.com/400x300/?smartphone"},
+  {title: "Laptop MacBook Air", description: "Laptop ușor și rapid", price: 7500, image: "https://source.unsplash.com/400x300/?laptop"},
+  {title: "Căști Sony WH-1000XM5", description: "Căști wireless cu anulare zgomot", price: 1200, image: "https://source.unsplash.com/400x300/?headphones"},
+  {title: "Televizor Samsung 55\"", description: "TV 4K Smart, ecran mare", price: 3800, image: "https://source.unsplash.com/400x300/?tv"},
+  {title: "Tabletă iPad Air", description: "Tabletă compactă cu ecran Retina", price: 3200, image: "https://source.unsplash.com/400x300/?tablet"},
+  {title: "Telefon iPhone 14", description: "Telefon pentru gaming și fotografie", price: 6800, image: "https://source.unsplash.com/400x300/?iphone"},
+  {title: "Laptop Dell XPS 13", description: "Laptop performant pentru muncă", price: 6000, image: "https://source.unsplash.com/400x300/?dell-laptop"},
+  {title: "Căști Bose QuietComfort", description: "Căști cu bass puternic și confortabile", price: 1300, image: "https://source.unsplash.com/400x300/?bose-headphones"},
+  {title: "Televizor LG OLED", description: "TV Smart cu culori vii", price: 4900, image: "https://source.unsplash.com/400x300/?oled-tv"},
+  {title: "Tabletă Samsung Galaxy Tab", description: "Tabletă pentru divertisment și muncă", price: 2800, image: "https://source.unsplash.com/400x300/?samsung-tablet"}
+];
+
+const productsDiv = document.getElementById('products');
+
+// Funcție pentru a crea un card produs
+function createProductCard(p) {
+    const card = document.createElement('div');
+    card.className = 'product-card';
+    card.innerHTML = `
+        <span class="badge-new">NOU</span>
+        <img src="${p.image}" alt="${p.title}">
+        <h3>${p.title}</h3>
+        <p class="product-desc">${p.description}</p>
+        <p class="price">${p.price} RON</p>
+        <button onclick="addToCart('${p.title}', ${p.price})">Adaugă în coș</button>
+        <button onclick="contactSeller('${p.title}')">Contactează vânzătorul</button>
+    `;
+    // Fade-in animat
+    card.style.opacity = 0;
+    productsDiv.appendChild(card);
+    setTimeout(() => {
+        card.style.opacity = 1;
+        card.style.transition = 'opacity 0.6s ease, transform 0.3s ease';
+    }, 50);
+}
+
+// Încarcă demo products
+demoProducts.forEach(createProductCard);
+
+// ========================
 // PRODUSE DIN FIRESTORE
 // ========================
-const productsDiv = document.getElementById('products');
 const productsCol = collection(db, 'products');
 const q = query(productsCol, orderBy('timestamp', 'desc'));
 
-// Afișare produse în timp real cu animație fade-in
+// Firestore nu va șterge demo-urile, doar adaugă după
 onSnapshot(q, snapshot => {
-    productsDiv.innerHTML = '';
     snapshot.forEach(doc => {
         const data = doc.data();
-        const card = document.createElement('div');
-        card.className = 'product-card';
-        card.innerHTML = `
-            <span class="badge-new">NOU</span>
-            <img src="${data.image}" alt="${data.title}">
-            <h3>${data.title}</h3>
-            <p class="product-desc">${data.description || ''}</p>
-            <p class="price">${data.price} RON</p>
-            <button onclick="addToCart('${data.title}', ${data.price})">Adaugă în coș</button>
-            <button onclick="contactSeller('${data.title}')">Contactează vânzătorul</button>
-        `;
-        card.style.opacity = 0;
-        productsDiv.appendChild(card);
-        // Fade-in animat
-        setTimeout(() => { card.style.opacity = 1; card.style.transition = 'opacity 0.6s ease, transform 0.3s ease'; }, 50);
+        createProductCard(data);
     });
 });
 
@@ -106,7 +133,7 @@ window.addProduct = async function() {
 }
 
 // ========================
-// COȘ (simplificat)
+// COȘ
 // ========================
 window.addToCart = function(title, price){
     const cartItems = document.getElementById('cart-items');
@@ -115,8 +142,6 @@ window.addToCart = function(title, price){
     item.textContent = `${title} - ${price} RON`;
     cartItems.appendChild(item);
     cartTotal.textContent = (parseFloat(cartTotal.textContent) + price).toFixed(2);
-
-    // Animație adăugare produs în coș
     item.style.transform = 'translateX(100px)';
     item.style.opacity = 0;
     setTimeout(() => {
@@ -126,7 +151,6 @@ window.addToCart = function(title, price){
     }, 50);
 }
 
-// Coș show/hide cu tranziție
 const cartContainer = document.getElementById('cart-container');
 document.getElementById('view-cart-btn').onclick = function(){
     cartContainer.classList.add('show');
@@ -149,39 +173,8 @@ function contactSeller(productName) {
 window.contactSeller = contactSeller;
 
 // ========================
-// DARK MODE (opțional)
+// DARK MODE
 // ========================
 window.toggleDarkMode = function() {
     document.body.classList.toggle('dark-mode');
-    }
-
-
-// ========================
-// PRODUSE DEMO
-// ========================
-const demoProducts = [
-  {title: "Telefon Galaxy S23", description: "Telefon performant cu cameră excelentă", price: 4500, image: "https://source.unsplash.com/400x300/?smartphone"},
-  {title: "Laptop MacBook Air", description: "Laptop ușor și rapid", price: 7500, image: "https://source.unsplash.com/400x300/?laptop"},
-  {title: "Căști Sony WH-1000XM5", description: "Căști wireless cu anulare zgomot", price: 1200, image: "https://source.unsplash.com/400x300/?headphones"},
-  {title: "Televizor Samsung 55\"", description: "TV 4K Smart, ecran mare", price: 3800, image: "https://source.unsplash.com/400x300/?tv"},
-  {title: "Tabletă iPad Air", description: "Tabletă compactă cu ecran Retina", price: 3200, image: "https://source.unsplash.com/400x300/?tablet"},
-  {title: "Telefon iPhone 14", description: "Telefon pentru gaming și fotografie", price: 6800, image: "https://source.unsplash.com/400x300/?iphone"},
-  {title: "Laptop Dell XPS 13", description: "Laptop performant pentru muncă", price: 6000, image: "https://source.unsplash.com/400x300/?dell-laptop"},
-  {title: "Căști Bose QuietComfort", description: "Căști cu bass puternic și confortabile", price: 1300, image: "https://source.unsplash.com/400x300/?bose-headphones"},
-  {title: "Televizor LG OLED", description: "TV Smart cu culori vii", price: 4900, image: "https://source.unsplash.com/400x300/?oled-tv"},
-  {title: "Tabletă Samsung Galaxy Tab", description: "Tabletă pentru divertisment și muncă", price: 2800, image: "https://source.unsplash.com/400x300/?samsung-tablet"}
-];
-
-demoProducts.forEach(p => {
-    const card = `
-    <div class="product-card">
-        <span class="badge-new">NOU</span>
-        <img src="${p.image}" alt="${p.title}">
-        <h3>${p.title}</h3>
-        <p class="product-desc">${p.description}</p>
-        <p class="price">${p.price} RON</p>
-        <button onclick="addToCart('${p.title}', ${p.price})">Adaugă în coș</button>
-        <button onclick="contactSeller('${p.title}')">Contactează vânzătorul</button>
-    </div>`;
-    productsDiv.innerHTML += card;
-});
+}
