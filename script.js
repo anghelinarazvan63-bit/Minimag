@@ -4,7 +4,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-analytics.js";
 import { 
-    getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut 
+    getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut,
+    GoogleAuthProvider, signInWithPopup
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
 import { 
     getFirestore, collection, addDoc, onSnapshot, query, orderBy 
@@ -28,6 +29,22 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 // ========================
+// GOOGLE SIGN-IN
+// ========================
+const googleProvider = new GoogleAuthProvider();
+window.loginWithGoogle = async function() {
+    try {
+        const result = await signInWithPopup(auth, googleProvider);
+        const user = result.user;
+        alert(`Bine ai venit, ${user.displayName}!`);
+        console.log(user);
+    } catch (error) {
+        alert(`Eroare Google login: ${error.message}`);
+        console.error(error);
+    }
+}
+
+// ========================
 // PRODUSE DEMO
 // ========================
 const demoProducts = [
@@ -45,6 +62,7 @@ const demoProducts = [
 
 const productsDiv = document.getElementById('products');
 
+// Funcție pentru a crea un card produs
 function createProductCard(p) {
     const card = document.createElement('div');
     card.className = 'product-card';
@@ -57,6 +75,7 @@ function createProductCard(p) {
         <button onclick="addToCart('${p.title}', ${p.price})">Adaugă în coș</button>
         <button onclick="contactSeller('${p.title}')">Contactează vânzătorul</button>
     `;
+    // Fade-in animat
     card.style.opacity = 0;
     productsDiv.appendChild(card);
     setTimeout(() => {
@@ -65,7 +84,7 @@ function createProductCard(p) {
     }, 50);
 }
 
-// Afișează întâi demo products
+// Încarcă demo products
 demoProducts.forEach(createProductCard);
 
 // ========================
@@ -74,6 +93,7 @@ demoProducts.forEach(createProductCard);
 const productsCol = collection(db, 'products');
 const q = query(productsCol, orderBy('timestamp', 'desc'));
 
+// Firestore nu va șterge demo-urile, doar adaugă după
 onSnapshot(q, snapshot => {
     snapshot.forEach(doc => {
         const data = doc.data();
@@ -82,37 +102,35 @@ onSnapshot(q, snapshot => {
 });
 
 // ========================
-// FUNCȚII AUTENTIFICARE
+// FUNCȚII AUTENTIFICARE EMAIL/PAROLĂ
 // ========================
 window.signupUser = async function() {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    if(!email || !password){ alert("Completează email și parolă!"); return; }
     try {
         await createUserWithEmailAndPassword(auth, email, password);
         alert('Cont creat cu succes!');
         document.getElementById('email').value = '';
         document.getElementById('password').value = '';
-    } catch(e) { alert("Eroare Firebase: " + e.message); }
+    } catch(e) { alert(e.message); }
 }
 
 window.loginUser = async function() {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    if(!email || !password){ alert("Completează email și parolă!"); return; }
     try {
         await signInWithEmailAndPassword(auth, email, password);
         alert('Te-ai logat cu succes!');
         document.getElementById('email').value = '';
         document.getElementById('password').value = '';
-    } catch(e) { alert("Eroare Firebase: " + e.message); }
+    } catch(e) { alert(e.message); }
 }
 
 window.logoutUser = async function() {
     try {
         await signOut(auth);
         alert('Te-ai delogat!');
-    } catch(e) { alert("Eroare Firebase: " + e.message); }
+    } catch(e) { alert(e.message); }
 }
 
 // ========================
