@@ -33,7 +33,7 @@ nav .nav-links {
 
 nav .nav-links a {
     color: red;
-    text-decoration: none;
+    text-decoration: black;
     margin-left: 10px;
     font-weight: bold;
 }
@@ -92,7 +92,7 @@ nav .cart {
 }
 
 .product-card {
-    background-color: white;
+    background-color: green;
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
