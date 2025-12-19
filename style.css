@@ -10,6 +10,12 @@ body {
     font-family: Arial, sans-serif;
     background-color: #f2f4f8;
     color: #222;
+    transition: background 0.3s ease;
+}
+
+body.dark-mode {
+    background-color: #1e1e1e;
+    color: #f2f4f8;
 }
 
 /* NAVBAR */
@@ -20,6 +26,10 @@ nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    position: sticky;
+    top: 0;
+    z-index: 500;
 }
 
 .logo {
@@ -40,10 +50,22 @@ nav {
     color: white;
     text-decoration: none;
     font-weight: bold;
+    position: relative;
 }
 
-.nav-links a:hover {
-    color: #ff2c2c;
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background-color: #ff2c2c;
+    left: 0;
+    bottom: -3px;
+    transition: width 0.3s;
+}
+
+.nav-links a:hover::after {
+    width: 100%;
 }
 
 /* BUTOANE GENERALE */
@@ -56,10 +78,12 @@ button {
     cursor: pointer;
     font-weight: bold;
     transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 button:hover {
     background-color: #ff2c2c;
+    transform: scale(1.05);
 }
 
 /* BANNER */
@@ -68,11 +92,35 @@ button:hover {
     color: white;
     text-align: center;
     padding: 60px 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.banner::after {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+    top: -50%;
+    left: -50%;
+    animation: rotateBg 20s linear infinite;
+}
+
+@keyframes rotateBg {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 .banner h1 {
     font-size: 38px;
     margin-bottom: 10px;
+    animation: fadeInDown 1s ease forwards;
+}
+
+.banner p {
+    font-size: 18px;
+    animation: fadeInUp 1s ease forwards;
 }
 
 /* AUTH */
@@ -86,12 +134,24 @@ button:hover {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    transition: transform 0.3s;
+}
+
+.auth-container:hover {
+    transform: translateY(-3px);
 }
 
 .auth-container input {
     padding: 10px;
     border-radius: 6px;
     border: 1px solid #ccc;
+    transition: all 0.3s ease;
+}
+
+.auth-container input:focus {
+    border-color: #0057ff;
+    outline: none;
+    box-shadow: 0 0 8px rgba(0,87,255,0.4);
 }
 
 /* FILTRE */
@@ -111,6 +171,18 @@ button:hover {
     padding: 8px;
     border-radius: 6px;
     border: 1px solid #ccc;
+    transition: all 0.3s ease;
+}
+
+.filter-container input:focus,
+.filter-container select:focus {
+    border-color: #0057ff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0,87,255,0.5);
+}
+
+.filter-container button {
+    font-weight: bold;
 }
 
 /* PRODUSE */
@@ -131,16 +203,17 @@ button:hover {
     border-radius: 14px;
     padding: 15px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-    transition: transform 0.2s, box-shadow 0.3s;
+    transition: transform 0.3s, box-shadow 0.3s;
     display: flex;
     flex-direction: column;
     gap: 10px;
     position: relative;
+    overflow: hidden;
 }
 
 .product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 25px rgba(0,0,0,0.18);
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.25);
 }
 
 .product-card img {
@@ -148,16 +221,28 @@ button:hover {
     height: 200px;
     object-fit: cover;
     border-radius: 10px;
+    transition: transform 0.3s, filter 0.3s;
+}
+
+.product-card img:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
 }
 
 .product-card h3 {
     font-size: 18px;
+    transition: color 0.3s;
+}
+
+.product-card h3:hover {
+    color: #0057ff;
 }
 
 /* DESCRIERE */
 .product-desc {
     font-size: 14px;
     color: #555;
+    line-height: 1.5;
 }
 
 /* PREȚ */
@@ -165,6 +250,11 @@ button:hover {
     font-size: 18px;
     font-weight: bold;
     color: #ff2c2c;
+    transition: color 0.3s;
+}
+
+.price:hover {
+    color: #0057ff;
 }
 
 /* COȘ */
@@ -178,15 +268,41 @@ button:hover {
     width: 300px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.25);
     z-index: 1000;
+    max-height: 70vh;
+    overflow-y: auto;
+    transition: transform 0.3s;
+}
+
+.cart-container.show {
+    transform: translateX(0);
+}
+
+.cart-container.hide {
+    transform: translateX(400px);
+}
+
+/* Scrollbar coș custom */
+.cart-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.cart-container::-webkit-scrollbar-thumb {
+    background-color: #0057ff;
+    border-radius: 6px;
+}
+
+.cart-container::-webkit-scrollbar-track {
+    background: #f2f4f8;
 }
 
 /* FOOTER */
 footer {
-    background: #003bb5;
+    background: linear-gradient(90deg, #003bb5, #001f7a);
     color: white;
     text-align: center;
     padding: 15px;
     margin-top: 40px;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.15);
 }
 
 /* BADGE NOU */
@@ -200,12 +316,20 @@ footer {
     font-size: 12px;
     font-weight: bold;
     border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    transition: transform 0.3s;
+}
+
+.badge-new:hover {
+    transform: scale(1.1);
 }
 
 /* BUTOANE CARD PRODUS */
 .product-card button {
     margin-top: 5px;
     transition: all 0.3s ease;
+    font-weight: bold;
+    border-radius: 6px;
 }
 
 .product-card button:nth-child(5) { /* Adaugă în coș */
@@ -225,3 +349,21 @@ footer {
     background-color: #0057ff;
     color: white;
 }
+
+/* ===========================
+   ANIMAȚII BANNER
+=========================== */
+@keyframes fadeInDown {
+    from {opacity: 0; transform: translateY(-20px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+@keyframes fadeInUp {
+    from {opacity: 0; transform: translateY(20px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+@keyframes rotateBg {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+    }
