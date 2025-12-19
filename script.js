@@ -1,4 +1,12 @@
-// Firebase config
+// ========================
+// FIREBASE INIT
+// ========================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-analytics.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+// Config Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyB8IUYlmq4kceZhC3gp6e8Mk9G7eLzrYvM",
   authDomain: "minimag-7ad90.firebaseapp.com",
@@ -10,133 +18,91 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
-const storage = firebase.storage();
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-// Elemente DOM
-const loginBtn = document.getElementById('login-btn');
-const signupBtn = document.getElementById('signup-btn');
-const logoutBtn = document.getElementById('logout-btn');
-const addProductBtn = document.getElementById('add-product-btn');
-const upgradeBtn = document.getElementById('upgrade-btn');
+// ========================
+// PRODUSE DIN FIRESTORE
+// ========================
 const productsDiv = document.getElementById('products');
-const addProductContainer = document.getElementById('add-product-container');
+const productsCol = collection(db, 'products');
+const q = query(productsCol, orderBy('timestamp', 'desc'));
 
-// LOGIN
-loginBtn?.addEventListener('click', () => {
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    auth.signInWithEmailAndPassword(email, password)
-        .then(() => alert('Autentificat!'))
-        .catch(err => alert(err.message));
-});
-
-// SIGNUP
-signupBtn?.addEventListener('click', () => {
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    auth.createUserWithEmailAndPassword(email, password)
-        .then(userCredential => {
-            const uid = userCredential.user.uid;
-            db.collection('users').doc(uid).set({
-                isPremium: false,
-                freeProducts: 5
-            });
-            alert('Cont creat!');
-        })
-        .catch(err => alert(err.message));
-});
-
-// LOGOUT
-logoutBtn?.addEventListener('click', () => {
-    auth.signOut();
-});
-
-// Observare stare autentificare
-auth.onAuthStateChanged(user => {
-    if(user){
-        addProductContainer.style.display = 'block';
-        logoutBtn.style.display = 'inline';
-        loginBtn.style.display = 'none';
-        signupBtn.style.display = 'none';
-    } else {
-        addProductContainer.style.display = 'none';
-        logoutBtn.style.display = 'none';
-        loginBtn.style.display = 'inline';
-        signupBtn.style.display = 'inline';
-    }
-});
-
-// Încarcă produsele live
-db.collection('products').orderBy('timestamp','desc').onSnapshot(snapshot => {
+// Afișare produse în timp real
+onSnapshot(q, snapshot => {
     productsDiv.innerHTML = '';
     snapshot.forEach(doc => {
         const data = doc.data();
         const card = `
-        <div class="product-card" data-category="${data.category || ''}" data-price="${data.price}">
+        <div class="product-card">
             <img src="${data.image}" alt="${data.title}">
             <h3>${data.title}</h3>
             <p class="product-desc">${data.description || ''}</p>
             <p class="price">${data.price} RON</p>
+            <button onclick="addToCart('${data.title}', ${data.price})">Adaugă în coș</button>
         </div>`;
         productsDiv.innerHTML += card;
     });
 });
 
-// Adaugă produs cu imagine upload
-addProductBtn?.addEventListener('click', async () => {
-    const title = document.getElementById('prod-title').value;
-    const description = document.getElementById('prod-desc').value;
-    const price = parseFloat(document.getElementById('prod-price').value);
-    const category = document.getElementById('prod-category')?.value || 'Altele';
-    const fileInput = document.getElementById('prod-file');
-    const file = fileInput?.files[0];
-    const user = auth.currentUser;
+// ========================
+// FUNCȚII AUTENTIFICARE
+// ========================
+window.signupUser = async function() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        alert('Cont creat cu succes!');
+    } catch(e) { alert(e.message); }
+}
 
-    if(!user) return alert('Trebuie să fii logat!');
-    if(!file) return alert('Selectează o imagine!');
+window.loginUser = async function() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    try {
+        await signInWithEmailAndPassword(auth, email, password);
+        alert('Te-ai logat cu succes!');
+    } catch(e) { alert(e.message); }
+}
 
-    const userDoc = await db.collection('users').doc(user.uid).get();
-    const userData = userDoc.data();
+window.logoutUser = async function() {
+    try {
+        await signOut(auth);
+        alert('Te-ai delogat!');
+    } catch(e) { alert(e.message); }
+}
 
-    if(!userData.isPremium && userData.freeProducts <= 0){
-        return alert('Ai atins limita produselor gratuite. Devii premium pentru mai multe.');
-    }
+// ========================
+// ADĂUGARE PRODUS
+// ========================
+window.addProduct = async function() {
+    const title = prompt("Titlu produs:");
+    const description = prompt("Descriere produs:");
+    const price = parseFloat(prompt("Preț produs:"));
+    const image = prompt("URL imagine:");
+    if(title && description && price && image){
+        await addDoc(productsCol, {title, description, price, image, timestamp: new Date()});
+        alert('Produs adăugat cu succes!');
+    } else { alert('Completează toate câmpurile!'); }
+}
 
-    // Upload imagine
-    const storageRef = storage.ref(`products/${user.uid}/${file.name}`);
-    const snapshot = await storageRef.put(file);
-    const imageURL = await snapshot.ref.getDownloadURL();
-
-    // Salvează produsul
-    await db.collection('products').add({
-        title, description, price, category, image: imageURL,
-        sellerId: user.uid,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-    });
-
-    if(!userData.isPremium){
-        db.collection('users').doc(user.uid).update({
-            freeProducts: userData.freeProducts - 1
-        });
-    }
-
-    alert('Produs adăugat cu succes!');
-    fileInput.value = '';
-});
-
-// Upgrade la premium
-upgradeBtn?.addEventListener('click', async () => {
-    const user = auth.currentUser;
-    if(!user) return alert('Trebuie să fii logat!');
-
-    const confirmPayment = confirm("Plata pentru premium (simulat)?");
-    if(confirmPayment){
-        await db.collection('users').doc(user.uid).update({
-            isPremium: true
-        });
-        alert('Acum ești premium! Poți adăuga câte produse vrei.');
-    }
-});
+// ========================
+// COȘ (simplificat)
+// ========================
+window.addToCart = function(title, price){
+    const cartItems = document.getElementById('cart-items');
+    const cartTotal = document.getElementById('cart-total');
+    const item = document.createElement('li');
+    item.textContent = `${title} - ${price} RON`;
+    cartItems.appendChild(item);
+    cartTotal.textContent = parseFloat(cartTotal.textContent) + price;
+}
+document.getElementById('view-cart-btn').onclick = function(){
+    document.getElementById('cart-container').style.display = 'block';
+}
+document.getElementById('close-cart').onclick = function(){
+    document.getElementById('cart-container').style.display = 'none';
+  }
