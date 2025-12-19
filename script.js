@@ -31,7 +31,7 @@ const productsCol = collection(db, 'products');
 const q = query(productsCol, orderBy('timestamp', 'desc'));
 
 // Afișare produse în timp real
-onSnapshot(q, snapshot => {
+<a onSnapshot(q, snapshot => {
     productsDiv.innerHTML = '';
     snapshot.forEach(doc => {
         const data = doc.data();
@@ -45,6 +45,7 @@ onSnapshot(q, snapshot => {
             <button onclick="addToCart('${data.title}', ${data.price})">Adaugă în coș</button>
             <button onclick="contactSeller('${data.title}')">Contactează vânzătorul</button>
         </div>`;
+      <a/>
         productsDiv.innerHTML += card;
     });
 });
