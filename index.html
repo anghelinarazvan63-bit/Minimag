@@ -36,6 +36,8 @@
         <button onclick="signupUser()">Creează cont</button>
         <button onclick="loginUser()">Loghează-te</button>
         <button onclick="logoutUser()">Deloghează-te</button>
+        <!-- Google Login -->
+        <button onclick="loginWithGoogle()">Loghează-te cu Google</button>
     </div>
 
     <!-- FILTRE -->
@@ -60,19 +62,7 @@
     <!-- PRODUSE -->
     <div class="container">
         <div class="products" id="products">
-            <!-- Produsele din Firebase vor apărea aici -->
-            <!-- Exemplu card cu badge "NOU" -->
-            <!--
-            <div class="product-card">
-                <span class="badge-new">NOU</span>
-                <img src="URL_IMAGINE" alt="Produs">
-                <h3>Titlu produs</h3>
-                <p class="product-desc">Descriere produs</p>
-                <p class="price">Preț RON</p>
-                <button onclick="addToCart('Titlu produs', 100)">Adaugă în coș</button>
-                <button onclick="contactSeller('Titlu produs')">Contactează vânzătorul</button>
-            </div>
-            -->
+            <!-- Produsele din Firebase și demo vor apărea aici -->
         </div>
     </div>
 
@@ -93,7 +83,6 @@
 
     <!-- ANIMAȚII SUPLIMENTARE ȘI HOVER BUTOANE -->
     <script>
-        // Functie pentru animatie la aparitia cardurilor
         function animateProductCards() {
             const productCards = document.querySelectorAll('.product-card');
             productCards.forEach((card, index) => {
@@ -103,16 +92,14 @@
                     card.style.transition = 'all 0.5s ease';
                     card.style.opacity = 1;
                     card.style.transform = 'translateY(0)';
-                }, index * 150); // animatie stagger
+                }, index * 150);
             });
         }
 
-        // Apelare la incarcare si dupa adaugarea produselor
         window.addEventListener('DOMContentLoaded', animateProductCards);
         const observer = new MutationObserver(animateProductCards);
         observer.observe(document.getElementById('products'), { childList: true });
 
-        // Hover suplimentar pentru butoanele din carduri
         const observeButtons = () => {
             const buttons = document.querySelectorAll('.product-card button');
             buttons.forEach(btn => {
@@ -125,4 +112,4 @@
         btnObserver.observe(document.getElementById('products'), { childList: true });
     </script>
 </body>
-        </html>
+    </html>
