@@ -171,19 +171,28 @@ window.contactSeller = contactSeller;
 // PRODUSE DEMO
 // ========================
 const demoProducts = [
-    // lista celor 10 produse demo (telefoane, laptopuri, TV, căști)
+  {title: "Telefon Galaxy S23", description: "Telefon performant cu cameră excelentă", price: 4500, image: "https://source.unsplash.com/400x300/?smartphone"},
+  {title: "Laptop MacBook Air", description: "Laptop ușor și rapid", price: 7500, image: "https://source.unsplash.com/400x300/?laptop"},
+  {title: "Căști Sony WH-1000XM5", description: "Căști wireless cu anulare zgomot", price: 1200, image: "https://source.unsplash.com/400x300/?headphones"},
+  {title: "Televizor Samsung 55\"", description: "TV 4K Smart, ecran mare", price: 3800, image: "https://source.unsplash.com/400x300/?tv"},
+  {title: "Tabletă iPad Air", description: "Tabletă compactă cu ecran Retina", price: 3200, image: "https://source.unsplash.com/400x300/?tablet"},
+  {title: "Telefon iPhone 14", description: "Telefon pentru gaming și fotografie", price: 6800, image: "https://source.unsplash.com/400x300/?iphone"},
+  {title: "Laptop Dell XPS 13", description: "Laptop performant pentru muncă", price: 6000, image: "https://source.unsplash.com/400x300/?dell-laptop"},
+  {title: "Căști Bose QuietComfort", description: "Căști cu bass puternic și confortabile", price: 1300, image: "https://source.unsplash.com/400x300/?bose-headphones"},
+  {title: "Televizor LG OLED", description: "TV Smart cu culori vii", price: 4900, image: "https://source.unsplash.com/400x300/?oled-tv"},
+  {title: "Tabletă Samsung Galaxy Tab", description: "Tabletă pentru divertisment și muncă", price: 2800, image: "https://source.unsplash.com/400x300/?samsung-tablet"}
 ];
 
-demoProducts.forEach(prod => {
+demoProducts.forEach(p => {
     const card = `
-        <div class="product-card">
-            <span class="badge-new">NOU</span>
-            <img src="${prod.image}" alt="${prod.title}">
-            <h3>${prod.title}</h3>
-            <p class="product-desc">${prod.description}</p>
-            <p class="price">${prod.price} RON</p>
-            <button onclick="addToCart('${prod.title}', ${prod.price})">Adaugă în coș</button>
-            <button onclick="contactSeller('${prod.title}')">Contactează vânzătorul</button>
-        </div>`;
+    <div class="product-card">
+        <span class="badge-new">NOU</span>
+        <img src="${p.image}" alt="${p.title}">
+        <h3>${p.title}</h3>
+        <p class="product-desc">${p.description}</p>
+        <p class="price">${p.price} RON</p>
+        <button onclick="addToCart('${p.title}', ${p.price})">Adaugă în coș</button>
+        <button onclick="contactSeller('${p.title}')">Contactează vânzătorul</button>
+    </div>`;
     productsDiv.innerHTML += card;
 });
