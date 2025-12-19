@@ -13,7 +13,7 @@ body {
 
 /* Navbar */
 nav {
-    background-color: #1e90ff;
+    background-color: #1E90FF; /* albastru */
     padding: 15px 20px;
     display: flex;
     justify-content: space-between;
@@ -32,7 +32,7 @@ nav .nav-links {
 }
 
 nav .nav-links a {
-    color: black;
+    color: white;
     text-decoration: none;
     margin-left: 20px;
     font-weight: bold;
@@ -48,7 +48,7 @@ nav .cart {
 
 /* Banner */
 .banner {
-    background-color: #add8e6;
+    background-color: #ADD8E6; /* albastru deschis */
     text-align: center;
     padding: 40px 20px;
     margin-bottom: 20px;
@@ -79,14 +79,15 @@ nav .cart {
 
 /* Container produse */
 .container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto 40px auto;
     padding: 0 20px;
 }
 
+/* Grid produse */
 .products {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 3fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 20px;
 }
 
@@ -127,7 +128,7 @@ nav .cart {
 }
 
 .product-card button {
-    background-color: #ff6600;
+    background-color: #1E90FF;
     color: white;
     border: none;
     padding: 8px 15px;
@@ -137,7 +138,7 @@ nav .cart {
 }
 
 .product-card button:hover {
-    background-color: #e65c00;
+    background-color: #1C86EE;
 }
 
 /* Footer */
