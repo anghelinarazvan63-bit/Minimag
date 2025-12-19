@@ -1,15 +1,11 @@
-/* ------------------- */
-/* Stiluri generale    */
-/* ------------------- */
 
-/* Body cu background iarnă */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     color: #000; /* text negru */
     background-color: #f0f0f0; /* gri deschis */
-    background-image: url('images/iarna.jpg'); /* poza ta de iarnă/Moș Crăciun */
+    background-image: url('https://www.google.com/search?q=poza+de+iarna&client=ms-android-xiaomi-terr1-rso2&hs=QVf9&sca_esv=1f0bb9d93a692111&sxsrf=AE3TifPxg5r4w_ll34HKqau3FvvkeEoo8Q%3A1766088988432&ei=HGFEaZ2NGtLy7M8Pv_yZ8Qo&oq=poza+de+iarna&gs_lp=EhNtb2JpbGUtZ3dzLXdpei1zZXJwIg1wb3phIGRlIGlhcm5hMgUQABiABDIGEAAYFhgeMgYQABgWGB4yBhAAGBYYHjIGEAAYFhgeMgYQABgWGB4yBhAAGBYYHjIGEAAYFhgeSPpmUJYNWIFhcAh4AZABA5gBsAGgAbQhqgEFMjUuMTi4AQPIAQD4AQGYAhugAsEXqAIewgIKEAAYsAMY1gQYR8ICDRAAGIAEGLADGEMYigXCAgcQIxiwAhgnwgIMEAAYExgFGAoYDRgewgIKEAAYExgIGA0YHsICBxAhGKABGArCAggQABiABBiiBMICBRAAGO8FwgIHECMYJxjqAsICDRAjGPAFGCcYyQIY6gLCAgcQLhgnGOoCwgIKECMY8AUYJxjqAsICChAjGIAEGCcYigXCAgsQLhiABBjRAxjHAcICChAjGPAFGCcYyQLCAgQQIxgnwgIKEAAYgAQYQxiKBcICChAuGIAEGEMYigXCAhAQIxjwBRiABBgnGMkCGIoFwgIFECEYoAGYAzHxBRVp-TSTpPodiAYBkAYJkgcGOS4xNy4xoAfMvgKyBwYyLjE2LjG4B9gVwgcKMy02LjE2LjQuMcgH7AaACAA&sclient=mobile-gws-wiz-serp#sv=CAMSXhoyKhBlLUhlUzhmMmd0OUlJOE5NMg5IZVM4ZjJndDlJSThOTToOLVkxM3BOeHNURHdmZU0gBCokCg51LTFqb2pDYWh4TnV4TRIQZS1IZVM4ZjJndDlJSThOTRgAMAEYByDHjfP8AzABSgoIAhACGAIgAigC'); /* poza ta de iarnă/Moș Crăciun */
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed; /* rămâne fix la scroll */
