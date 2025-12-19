@@ -4,8 +4,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-analytics.js";
 import { 
-    getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut,
-    GoogleAuthProvider, signInWithPopup
+    getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
 import { 
     getFirestore, collection, addDoc, onSnapshot, query, orderBy 
@@ -29,7 +28,7 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 // ========================
-// PRODUSE DEMO
+// DEMO PRODUSE
 // ========================
 const demoProducts = [
   {title: "Telefon Galaxy S23", description: "Telefon performant cu cameră excelentă", price: 4500, image: "https://source.unsplash.com/400x300/?smartphone"},
@@ -110,27 +109,26 @@ window.loginUser = async function() {
     } catch(e) { alert(e.message); }
 }
 
+// ========================
+// LOGIN CU GOOGLE
+// ========================
+const googleProvider = new GoogleAuthProvider();
+window.loginWithGoogle = async function() {
+    try {
+        const result = await signInWithPopup(auth, googleProvider);
+        const user = result.user;
+        alert(`Te-ai logat cu Google: ${user.displayName}`);
+    } catch (error) {
+        console.error(error);
+        alert(`Eroare login Google: ${error.message}`);
+    }
+}
+
 window.logoutUser = async function() {
     try {
         await signOut(auth);
         alert('Te-ai delogat!');
     } catch(e) { alert(e.message); }
-}
-
-// ========================
-// LOGIN CU GOOGLE
-// ========================
-window.loginWithGoogle = async function() {
-    const provider = new GoogleAuthProvider();
-    try {
-        const result = await signInWithPopup(auth, provider);
-        const user = result.user;
-        alert(`Te-ai logat cu Google cu succes! Bun venit, ${user.displayName}`);
-        console.log(user);
-    } catch(error) {
-        console.error(error);
-        alert(`Eroare la logarea cu Google: ${error.message}`);
-    }
 }
 
 // ========================
