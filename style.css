@@ -87,8 +87,8 @@ nav .cart {
 /* Grid produse */
 .products {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
 }
 
 .product-card {
@@ -201,4 +201,83 @@ footer {
     background-color: #1E90FF;
     color: white;
     cursor: pointer;
+    }
+.product-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    transition: 0.3s ease;
+    }
+
+button:hover {
+    background-color: #0f70d0;
+    cursor: pointer;
+    transform: scale(1.05);
+    transition: 0.2s ease;
+}
+.banner {
+    background: linear-gradient(90deg, #1E90FF, #00BFFF);
+    color: white;
+    padding: 50px 0;
+    text-align: center;
+}
+.product-card {
+    border-radius: 15px;
+    overflow: hidden;
+    background-color: #fff;
+    transition: 0.3s;
+    }
+.product-card {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.product-card {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeIn 0.5s forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+<div class="product-card" data-category="Telefoane" data-price="1500">
+    <span class="badge">Nou!</span>
+    <img src="images/samsung.jpg" alt="Samsung Galaxy">
+    ...
+</div>
+.badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: red;
+    color: white;
+    padding: 3px 6px;
+    font-size: 12px;
+    border-radius: 5px;
+}
+.product-card {
+    position: relative;
+}
+#cart-items {
+    max-height: 200px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+#cart-items::-webkit-scrollbar {
+    width: 6px;
+}
+#cart-items::-webkit-scrollbar-thumb {
+    background-color: #1E90FF;
+    border-radius: 3px;
+}
+
+
+@media (max-width: 600px) {
+    .products {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    }
+    .product-card img {
+        height: 100px;
+    }
     }
