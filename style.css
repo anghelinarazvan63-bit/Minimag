@@ -1,41 +1,50 @@
-* {
+/* ------------------- */
+/* Stiluri generale    */
+/* ------------------- */
+
+/* Body cu background iarnă */
+body {
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    color: #000; /* text negru */
+    background-color: #f0f0f0; /* gri deschis */
+    background-image: url('images/iarna.jpg'); /* poza ta de iarnă/Moș Crăciun */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* rămâne fix la scroll */
 }
 
-body {
-    background-color: #f5f5f5;
-    color: #333;
-    line-height: 1.6;
+/* Overlay semi-transparent ca textul să fie vizibil */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(255, 255, 255, 0.3);
+    pointer-events: none;
 }
 
 /* Navbar */
 nav {
-    background-color: #1E90FF; /* albastru */
-    padding: 15px 20px;
+    background-color: #1E90FF; /* albastru Mini eMag */
+    padding: 15px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: white;
+    color: #fff;
 }
 
 nav .logo {
-    font-size: 10px;
     font-weight: bold;
-}
-
-nav .nav-links {
-    display: flex;
-    align-items: center;
+    font-size: 24px;
 }
 
 nav .nav-links a {
-    color: red;
-    text-decoration: black;
-    margin-left: 10px;
-    font-weight: bold;
+    margin-right: 20px;
+    text-decoration: none;
+    color: #fff;
+    font-weight: 500;
 }
 
 nav .nav-links a:hover {
@@ -43,241 +52,168 @@ nav .nav-links a:hover {
 }
 
 nav .cart {
-    margin-left: 10px;
+    font-weight: 500;
+}
+
+button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: #0f70d0;
+    color: #fff;
+    transition: 0.2s ease;
+}
+
+button:hover {
+    background-color: #094a8b;
+    cursor: pointer;
+    transform: scale(1.05);
 }
 
 /* Banner */
 .banner {
-    background-color: #ADD8E6; /* albastru deschis */
+    background: #1E90FF;
+    color: #fff;
+    padding: 50px 20px;
     text-align: center;
-    padding: 40px 20px;
-    margin-bottom: 20px;
-    border-radius: 10px;
 }
 
-.banner h1 {
-    font-size: 15px;
-    margin-bottom: 10px;
+/* Filtre */
+.filter-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
 }
 
-.banner p {
-    font-size: 25px;
-}
-
-/* Search */
-.search-container {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.search-container input {
-    width: 150px;
-    padding: 10px;
+.filter-container input, .filter-container select {
+    padding: 6px 10px;
     border-radius: 5px;
-    border: 2px solid #ccc;
+    border: 1px solid #ccc;
 }
 
 /* Container produse */
 .container {
-    max-width: 1400px;
-    margin: 0 auto 40px auto;
-    padding: 0 20px;
+    padding: 20px;
 }
 
-/* Grid produse */
+/* Grid produse - două coloane */
 .products {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 2fr));
-    gap: 10px;
-}
-
-.product-card {
-    background-color: green;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    text-align: center;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-}
-
-.product-card img {
-    max-width: 100%;
-    height: 150px;
-    object-fit: contain;
-    margin-bottom: 10px;
-}
-
-.product-card h3 {
-    font-size: 18px;
-    margin-bottom: 5px;
-}
-
-.product-card p {
-    color: #550;
-    margin-bottom: 10px;
-}
-
-.product-card .price {
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-.product-card button {
-    background-color: #1E90FF;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.product-card button:hover {
-    background-color: #1C86EE;
-}
-
-/* Footer */
-footer {
-    text-align: center;
-    padding: 20px;
-    background-color: #333;
-    color: white;
-}
-.filter-container {
-    display: flex;
-    justify-content: center;
+    grid-template-columns: repeat(2, 1fr);
     gap: 20px;
-    margin-bottom: 20px;
 }
 
-.filter-container select {
-    padding: 8px 12px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    }
-.cart-container {
-    position: fixed;
-    top: 50px;
-    right: 20px;
-    background-color: white;
-    border: 2px solid #1E90FF;
-    padding: 20px;
-    border-radius: 10px;
-    width: 300px;
-    max-height: 400px;
-    overflow-y: auto;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    z-index: 100;
-}
-
-.cart-container h2 {
-    margin-bottom: 15px;
-    text-align: center;
-}
-
-.cart-container ul {
-    list-style: none;
-    padding: 0;
-    margin-bottom: 10px;
-}
-
-.cart-container li {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
-}
-
-.cart-container button {
-    margin-top: 10px;
-    width: 100%;
-    padding: 8px;
-    border: none;
-    border-radius: 5px;
-    background-color: #1E90FF;
-    color: white;
-    cursor: pointer;
-    }
-.product-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-    transition: 0.3s ease;
-    }
-
-button:hover {
-    background-color: #0f70d0;
-    cursor: pointer;
-    transform: scale(1.05);
-    transition: 0.2s ease;
-}
-.banner {
-    background: linear-gradient(90deg, #1E90FF, #00BFFF);
-    color: white;
-    padding: 50px 0;
-    text-align: center;
-}
+/* Card produs */
 .product-card {
-    border-radius: 15px;
-    overflow: hidden;
     background-color: #fff;
-    transition: 0.3s;
-    }
-.product-card {
+    border-radius: 12px;
+    padding: 10px;
+    text-align: center;
+    position: relative;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-.product-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     opacity: 0;
     transform: translateY(20px);
     animation: fadeIn 0.5s forwards;
 }
 
+.product-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.product-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: contain;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+
+.product-card .price {
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+/* Badge */
+.badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: red;
+    color: #fff;
+    padding: 3px 6px;
+    font-size: 12px;
+    border-radius: 5px;
+}
+
+/* Animatie fade-in */
 @keyframes fadeIn {
     to {
         opacity: 1;
         transform: translateY(0);
     }
 }
-<div class="product-card" data-category="Telefoane" data-price="1500">
-    <span class="badge">Nou!</span>
-    <img src="images/samsung.jpg" alt="Samsung Galaxy">
-    ...
-</div>
-.badge {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background-color: red;
-    color: white;
-    padding: 3px 6px;
-    font-size: 12px;
-    border-radius: 5px;
+
+/* Coș */
+.cart-container {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 15px;
+    width: 250px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    z-index: 1000;
 }
-.product-card {
-    position: relative;
-}
+
 #cart-items {
+    list-style: none;
+    padding: 0;
     max-height: 200px;
     overflow-y: auto;
-    padding-right: 5px;
+    margin-bottom: 10px;
 }
-#cart-items::-webkit-scrollbar {
-    width: 6px;
+
+#cart-items li {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
 }
-#cart-items::-webkit-scrollbar-thumb {
-    background-color: #1E90FF;
+
+#cart-items li button {
+    background-color: red;
+    padding: 2px 5px;
     border-radius: 3px;
 }
 
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #e0e0e0;
+    color: #000;
+    margin-top: 20px;
+}
+
+/* ------------------- */
+/* Responsive          */
+/* ------------------- */
+@media (max-width: 800px) {
+    .products {
+        grid-template-columns: 1fr;
+    }
+}
 
 @media (max-width: 600px) {
-    .products {
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    .filter-container {
+        flex-direction: column;
+        gap: 10px;
     }
     .product-card img {
-        height: 100px;
+        height: 150px;
     }
-    }
+}
