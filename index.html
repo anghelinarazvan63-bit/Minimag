@@ -1,151 +1,74 @@
-<!DOCTYPE html>
-<html lang="ro">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mini eMag</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-    // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+<!-- Firebase + JS -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+    // Configurația proiectului tău Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyB8IUYlmq4kceZhC3gp6e8Mk9G7eLzrYvM",
+        authDomain: "minimag-7ad90.firebaseapp.com",
+        projectId: "minimag-7ad90",
+        storageBucket: "minimag-7ad90.firebasestorage.app",
+        messagingSenderId: "685055029064",
+        appId: "1:685055029064:web:8e2fe8f8b689245dd24d7d",
+        measurementId: "G-SCMXR51H2G"
+    };
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyB8IUYlmq4kceZhC3gp6e8Mk9G7eLzrYvM",
-  authDomain: "minimag-7ad90.firebaseapp.com",
-  projectId: "minimag-7ad90",
-  storageBucket: "minimag-7ad90.firebasestorage.app",
-  messagingSenderId: "685055029064",
-  appId: "1:685055029064:web:8e2fe8f8b689245dd24d7d",
-  measurementId: "G-SCMXR51H2G"
-};
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-<body>
-    <div id="cart-container" class="cart-container" style="display:none;">
-    <h2>Coșul tău</h2>
-    <ul id="cart-items"></ul>
-    <p>Total: <span id="cart-total">0</span> RON</p>
-    <button id="close-cart">Închide</button>
-    </div>
-
-    <!-- Navbar -->
-    <nav>
-        <div class="logo">Mini eMag</div>
-        <div class="nav-links">
-            <a href="#">Acasă</a>
-            <a href="#">Produse</a>
-            <a href="#">Contact</a>
-            <div class="cart">
-                Coș: <span id="cart-count">0</span>
-                <button id="view-cart-btn">Vezi coș</button>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Banner -->
-    <div class="banner">
-        <h1>Bine ai venit la MiniMag!</h1>
-        <p>Cele mai bune produse la un click distanță</p>
-    </div>
-
-    <!-- Căutare + filtre -->
-    <div class="filter-container">
-        <input type="text" id="search" placeholder="Caută produse...">
-        <select id="category-filter">
-            <option value="All">Toate categoriile</option>
-            <option value="Telefoane">Telefoane</option>
-            <option value="Laptopuri">Laptopuri</option>
-            <option value="Accesorii">Accesorii</option>
-            <option value="Tablete">Tablete</option>
-            <option value="Televizoare">Televizoare</option>
-        </select>
-        <select id="sort-filter">
-            <option value="none">Sortare</option>
-            <option value="asc">Preț crescător</option>
-            <option value="desc">Preț descrescător</option>
-        </select>
-    </div>
-
-    <!-- Produse -->
-    <div class="container">
-        <div class="products" id="products">
-            <a href="#">
-                <div class="product-card" data-category="Telefoane" data-price="1500">
-                    <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=150&q=80" alt="Samsung Galaxy">
-                    <h3>Samsung Galaxy</h3>
-                    <p class="price">1500 RON</p>
-                    <button onclick="addToCart('Samsung Galaxy', 1500)">Adaugă în coș</button>
+    // Încarcă produsele în timp real
+    const productsDiv = document.getElementById('products');
+    db.collection('products').onSnapshot(snapshot => {
+        productsDiv.innerHTML = '';
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            const card = `
+                <div class="product-card">
+                    <img src="${data.image}" alt="${data.title}">
+                    <h3>${data.title}</h3>
+                    <p class="product-desc">${data.description || ''}</p>
+                    <p class="price">${data.price} RON</p>
+                    <button onclick="addToCart('${data.title}', ${data.price})">Adaugă în coș</button>
                 </div>
-            </a>
+            `;
+            productsDiv.innerHTML += card;
+        });
+    });
 
-            <a href="#">
-                <div class="product-card" data-category="Laptopuri" data-price="3500">
-                    <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=150&q=80" alt="Laptop Dell">
-                    <h3>Laptop Dell</h3>
-                    <p class="price">3500 RON</p>
-                    <p
-                        class="product-desc"> Laptop performant, procesor intel i7,16gb RAM, ssd 512 gb.</p>
-                    <button onclick="addToCart('Laptop Dell', 3500)">Adaugă în coș</button>
-                </div>
-            </a>
+    // Funcție pentru a adăuga produse
+    function addProduct() {
+        const title = document.getElementById('title').value;
+        const description = document.getElementById('description').value;
+        const price = parseFloat(document.getElementById('price').value);
+        const image = document.getElementById('image').value;
 
-            <a href="#">
-                <div class="product-card" data-category="Accesorii" data-price="300">
-                    <img src="https://images.unsplash.com/photo-1510915228340-29c85a43dcfe?auto=format&fit=crop&w=150&q=80" alt="Căști Sony">
-                    <h3>Căști Sony</h3>
-                    <p class="price">300 RON</p>
-                    <button onclick="addToCart('Căști Sony', 300)">Adaugă în coș</button>
-                </div>
-            </a>
+        if(title && description && price && image){
+            db.collection('products').add({ title, description, price, image })
+              .then(() => alert('Produs adăugat cu succes!'))
+              .catch(err => alert(err));
+        } else {
+            alert('Completează toate câmpurile!');
+        }
+    }
 
-            <a href="#">
-                <div class="product-card" data-category="Accesorii" data-price="800">
-                    <img src="https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?auto=format&fit=crop&w=150&q=80" alt="Ceas Apple">
-                    <h3>Ceas Apple</h3>
-                    <p class="price">800 RON</p>
-                    <button onclick="addToCart('Ceas Apple', 800)">Adaugă în coș</button>
-                </div>
-            </a>
-
-            <a href="#">
-                <div class="product-card" data-category="Tablete" data-price="1200">
-                    <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=150&q=80" alt="iPad">
-                    <h3>iPad</h3>
-                    <p class="price">1200 RON</p>
-                    <button onclick="addToCart('iPad', 1200)">Adaugă în coș</button>
-                </div>
-            </a>
-
-            <a href="#">
-                <div class="product-card" data-category="Televizoare" data-price="2500">
-                    <img src="https://share.google/BkJm5djFmR6hOGU9d" alt="Televizor LG">
-                    <h3>Televizor LG</h3>
-                    <p class="price">2500 RON</p>
-                    <button onclick="addToCart('Televizor LG', 2500)">Adaugă în coș</button>
-                </div>
-            </a>
-        </div>
-    </div>
-
-    <!-- Container coș -->
-    <div id="cart-container" class="cart-container" style="display:none;">
-        <h2>Coșul tău</h2>
-        <ul id="cart-items"></ul>
-        <p>Total: <span id="cart-total">0</span> RON</p>
-        <button id="close-cart">Închide</button>
-    </div>
-
-    <footer>
-        &copy; 2025 Mini eMag | Toate drepturile rezervate
-    </footer>
-
-    <script src="script.js"></script>
-</body>
-</html>
+    // Coș simplu
+    let cart = [];
+    function addToCart(title, price) {
+        cart.push({ title, price });
+        document.getElementById('cart-count').innerText = cart.length;
+        renderCart();
+    }
+    function renderCart() {
+        const cartItems = document.getElementById('cart-items');
+        cartItems.innerHTML = '';
+        let total = 0;
+        cart.forEach(item => {
+            cartItems.innerHTML += `<li>${item.title} - ${item.price} RON</li>`;
+            total += item.price;
+        });
+        document.getElementById('cart-total').innerText = total;
+    }
+    document.getElementById('view-cart-btn').onclick = () => document.getElementById('cart-container').style.display = 'block';
+    document.getElementById('close-cart').onclick = () => document.getElementById('cart-container').style.display = 'none';
+</script>
