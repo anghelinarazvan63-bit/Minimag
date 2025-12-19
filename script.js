@@ -108,3 +108,10 @@ document.getElementById('view-cart-btn').onclick = function(){
 document.getElementById('close-cart').onclick = function(){
     document.getElementById('cart-container').style.display = 'none';
   }
+function contactSeller(productName) {
+    const message = prompt(`Trimite mesaj vânzătorului pentru produsul: ${productName}`);
+    if(message) {
+        alert(`Mesajul tău a fost trimis: "${message}"\n(Vânzătorul va fi notificat)`);
+        // Aici poți conecta Firebase sau email mai târziu
+    }
+      }
