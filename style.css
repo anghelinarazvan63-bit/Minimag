@@ -131,3 +131,34 @@ nav .nav-links a:hover {
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba
+/* Formular adaugare produs */
+.auth-container, .add-product-form {
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin: 20px auto;
+    max-width: 400px;
+}
+
+.auth-container input, .add-product-form input, .add-product-form textarea {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.auth-container button, .add-product-form button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 15px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.auth-container button:hover, .add-product-form button:hover {
+    background-color: #0056b3;
+   }
