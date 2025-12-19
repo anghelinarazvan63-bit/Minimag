@@ -13,12 +13,14 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
+const storage = firebase.storage();
 
 // Elemente DOM
 const loginBtn = document.getElementById('login-btn');
 const signupBtn = document.getElementById('signup-btn');
 const logoutBtn = document.getElementById('logout-btn');
 const addProductBtn = document.getElementById('add-product-btn');
+const upgradeBtn = document.getElementById('upgrade-btn');
 const productsDiv = document.getElementById('products');
 const addProductContainer = document.getElementById('add-product-container');
 
@@ -83,26 +85,34 @@ db.collection('products').orderBy('timestamp','desc').onSnapshot(snapshot => {
     });
 });
 
-// Adaugă produs
+// Adaugă produs cu imagine upload
 addProductBtn?.addEventListener('click', async () => {
     const title = document.getElementById('prod-title').value;
     const description = document.getElementById('prod-desc').value;
     const price = parseFloat(document.getElementById('prod-price').value);
-    const image = document.getElementById('prod-image').value;
+    const category = document.getElementById('prod-category')?.value || 'Altele';
+    const fileInput = document.getElementById('prod-file');
+    const file = fileInput?.files[0];
     const user = auth.currentUser;
 
     if(!user) return alert('Trebuie să fii logat!');
+    if(!file) return alert('Selectează o imagine!');
 
     const userDoc = await db.collection('users').doc(user.uid).get();
     const userData = userDoc.data();
 
-    // Verifică limita produselor gratuite
     if(!userData.isPremium && userData.freeProducts <= 0){
         return alert('Ai atins limita produselor gratuite. Devii premium pentru mai multe.');
     }
 
+    // Upload imagine
+    const storageRef = storage.ref(`products/${user.uid}/${file.name}`);
+    const snapshot = await storageRef.put(file);
+    const imageURL = await snapshot.ref.getDownloadURL();
+
+    // Salvează produsul
     await db.collection('products').add({
-        title, description, price, image,
+        title, description, price, category, image: imageURL,
         sellerId: user.uid,
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
     });
@@ -114,4 +124,19 @@ addProductBtn?.addEventListener('click', async () => {
     }
 
     alert('Produs adăugat cu succes!');
+    fileInput.value = '';
+});
+
+// Upgrade la premium
+upgradeBtn?.addEventListener('click', async () => {
+    const user = auth.currentUser;
+    if(!user) return alert('Trebuie să fii logat!');
+
+    const confirmPayment = confirm("Plata pentru premium (simulat)?");
+    if(confirmPayment){
+        await db.collection('users').doc(user.uid).update({
+            isPremium: true
+        });
+        alert('Acum ești premium! Poți adăuga câte produse vrei.');
+    }
 });
