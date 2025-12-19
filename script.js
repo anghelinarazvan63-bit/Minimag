@@ -4,14 +4,15 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-analytics.js";
 import { 
-    getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut,
-    GoogleAuthProvider, signInWithPopup
+    getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
 import { 
     getFirestore, collection, addDoc, onSnapshot, query, orderBy 
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 
-// Config Firebase
+// ========================
+// CONFIG FIREBASE
+// ========================
 const firebaseConfig = {
     apiKey: "AIzaSyB8IUYlmq4kceZhC3gp6e8Mk9G7eLzrYvM",
     authDomain: "minimag-7ad90.firebaseapp.com",
@@ -22,47 +23,32 @@ const firebaseConfig = {
     measurementId: "G-SCMXR51H2G"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
 // ========================
-// GOOGLE SIGN-IN
-// ========================
-const googleProvider = new GoogleAuthProvider();
-window.loginWithGoogle = async function() {
-    try {
-        const result = await signInWithPopup(auth, googleProvider);
-        const user = result.user;
-        alert(`Bine ai venit, ${user.displayName}!`);
-        console.log(user);
-    } catch (error) {
-        alert(`Eroare Google login: ${error.message}`);
-        console.error(error);
-    }
-}
-
-// ========================
 // PRODUSE DEMO
 // ========================
 const demoProducts = [
-  {title: "Telefon Galaxy S23", description: "Telefon performant cu cameră excelentă", price: 4500, image: "https://source.unsplash.com/400x300/?smartphone"},
-  {title: "Laptop MacBook Air", description: "Laptop ușor și rapid", price: 7500, image: "https://source.unsplash.com/400x300/?laptop"},
-  {title: "Căști Sony WH-1000XM5", description: "Căști wireless cu anulare zgomot", price: 1200, image: "https://source.unsplash.com/400x300/?headphones"},
-  {title: "Televizor Samsung 55\"", description: "TV 4K Smart, ecran mare", price: 3800, image: "https://source.unsplash.com/400x300/?tv"},
-  {title: "Tabletă iPad Air", description: "Tabletă compactă cu ecran Retina", price: 3200, image: "https://source.unsplash.com/400x300/?tablet"},
-  {title: "Telefon iPhone 14", description: "Telefon pentru gaming și fotografie", price: 6800, image: "https://source.unsplash.com/400x300/?iphone"},
-  {title: "Laptop Dell XPS 13", description: "Laptop performant pentru muncă", price: 6000, image: "https://source.unsplash.com/400x300/?dell-laptop"},
-  {title: "Căști Bose QuietComfort", description: "Căști cu bass puternic și confortabile", price: 1300, image: "https://source.unsplash.com/400x300/?bose-headphones"},
-  {title: "Televizor LG OLED", description: "TV Smart cu culori vii", price: 4900, image: "https://source.unsplash.com/400x300/?oled-tv"},
-  {title: "Tabletă Samsung Galaxy Tab", description: "Tabletă pentru divertisment și muncă", price: 2800, image: "https://source.unsplash.com/400x300/?samsung-tablet"}
+    {title: "Telefon Galaxy S23", description: "Telefon performant cu cameră excelentă", price: 4500, image: "https://source.unsplash.com/400x300/?smartphone"},
+    {title: "Laptop MacBook Air", description: "Laptop ușor și rapid", price: 7500, image: "https://source.unsplash.com/400x300/?laptop"},
+    {title: "Căști Sony WH-1000XM5", description: "Căști wireless cu anulare zgomot", price: 1200, image: "https://source.unsplash.com/400x300/?headphones"},
+    {title: "Televizor Samsung 55\"", description: "TV 4K Smart, ecran mare", price: 3800, image: "https://source.unsplash.com/400x300/?tv"},
+    {title: "Tabletă iPad Air", description: "Tabletă compactă cu ecran Retina", price: 3200, image: "https://source.unsplash.com/400x300/?tablet"},
+    {title: "Telefon iPhone 14", description: "Telefon pentru gaming și fotografie", price: 6800, image: "https://source.unsplash.com/400x300/?iphone"},
+    {title: "Laptop Dell XPS 13", description: "Laptop performant pentru muncă", price: 6000, image: "https://source.unsplash.com/400x300/?dell-laptop"},
+    {title: "Căști Bose QuietComfort", description: "Căști cu bass puternic și confortabile", price: 1300, image: "https://source.unsplash.com/400x300/?bose-headphones"},
+    {title: "Televizor LG OLED", description: "TV Smart cu culori vii", price: 4900, image: "https://source.unsplash.com/400x300/?oled-tv"},
+    {title: "Tabletă Samsung Galaxy Tab", description: "Tabletă pentru divertisment și muncă", price: 2800, image: "https://source.unsplash.com/400x300/?samsung-tablet"}
 ];
 
 const productsDiv = document.getElementById('products');
 
-// Funcție pentru a crea un card produs
+// ========================
+// FUNCȚII PRODUSE
+// ========================
 function createProductCard(p) {
     const card = document.createElement('div');
     card.className = 'product-card';
@@ -75,7 +61,6 @@ function createProductCard(p) {
         <button onclick="addToCart('${p.title}', ${p.price})">Adaugă în coș</button>
         <button onclick="contactSeller('${p.title}')">Contactează vânzătorul</button>
     `;
-    // Fade-in animat
     card.style.opacity = 0;
     productsDiv.appendChild(card);
     setTimeout(() => {
@@ -93,7 +78,6 @@ demoProducts.forEach(createProductCard);
 const productsCol = collection(db, 'products');
 const q = query(productsCol, orderBy('timestamp', 'desc'));
 
-// Firestore nu va șterge demo-urile, doar adaugă după
 onSnapshot(q, snapshot => {
     snapshot.forEach(doc => {
         const data = doc.data();
@@ -102,7 +86,7 @@ onSnapshot(q, snapshot => {
 });
 
 // ========================
-// FUNCȚII AUTENTIFICARE EMAIL/PAROLĂ
+// AUTENTIFICARE EMAIL/PAROLĂ
 // ========================
 window.signupUser = async function() {
     const email = document.getElementById('email').value;
@@ -131,6 +115,21 @@ window.logoutUser = async function() {
         await signOut(auth);
         alert('Te-ai delogat!');
     } catch(e) { alert(e.message); }
+}
+
+// ========================
+// AUTENTIFICARE GOOGLE
+// ========================
+const provider = new GoogleAuthProvider();
+window.loginWithGoogle = async function() {
+    try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        alert(`Te-ai logat cu succes, ${user.displayName}!`);
+    } catch (error) {
+        console.error(error);
+        alert(`Eroare la logarea cu Google: ${error.message}`);
+    }
 }
 
 // ========================
@@ -181,13 +180,12 @@ document.getElementById('close-cart').onclick = function(){
 // ========================
 // CONTACT VÂNZĂTOR
 // ========================
-function contactSeller(productName) {
+window.contactSeller = function(productName) {
     const message = prompt(`Trimite mesaj vânzătorului pentru produsul: ${productName}`);
     if(message) {
         alert(`Mesajul tău a fost trimis: "${message}"\n(Vânzătorul va fi notificat)`);
     }
 }
-window.contactSeller = contactSeller;
 
 // ========================
 // DARK MODE
