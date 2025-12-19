@@ -1,168 +1,96 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mini eMag</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini eMag</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Autentificare -->
-  <div id="auth-container">
-    <h3>Autentificare</h3>
-    <input type="email" id="email" placeholder="Email">
-    <input type="password" id="password" placeholder="Parolă">
-    <button id="register-btn">Înregistrează-te</button>
-    <button id="login-btn">Autentificare</button>
-    <button id="logout-btn">Deconectare</button>
-    <p id="auth-status"></p>
-  </div>
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 
-  <!-- Navbar -->
-  <nav>
-    <div class="logo">Mini eMag</div>
-  </nav>
+    <!-- Formular autentificare -->
+    <div id="auth-container">
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Parolă">
+        <button id="login-btn">Loghează-te</button>
+        <button id="signup-btn">Creează cont</button>
+        <button id="logout-btn" style="display:none;">Logout</button>
+    </div>
 
-  <!-- Banner -->
-  <div class="banner">
-    <h1>Bine ai venit la MiniMag!</h1>
-    <p>Cele mai bune produse la un click distanță</p>
-  </div>
+    <!-- Formular adăugare produs -->
+    <div id="add-product-container" style="display:none;">
+        <input type="text" id="prod-title" placeholder="Titlu produs">
+        <textarea id="prod-desc" placeholder="Descriere produs"></textarea>
+        <input type="number" id="prod-price" placeholder="Preț">
+        <input type="text" id="prod-category" placeholder="Categorie">
+        <input type="file" id="prod-file" accept="image/*">
+        <button id="add-product-btn">Adaugă produs</button>
+        <button id="upgrade-btn">Devino Premium</button>
+    </div>
 
-  <!-- Adaugare produs -->
-  <button id="add-product-btn">Adaugă produs</button>
+    <!-- Navbar -->
+    <nav>
+        <div class="logo">Mini eMag</div>
+        <div class="nav-links">
+            <a href="#">Acasă</a>
+            <a href="#">Produse</a>
+            <a href="#">Contact</a>
+            <div class="cart">
+                Coș: <span id="cart-count">0</span>
+                <button id="view-cart-btn">Vezi coș</button>
+            </div>
+        </div>
+    </nav>
 
-  <!-- Produse -->
-  <div class="container">
-    <div class="products" id="products"></div>
-  </div>
+    <!-- Banner -->
+    <div class="banner">
+        <h1>Bine ai venit la MiniMag!</h1>
+        <p>Cele mai bune produse la un click distanță</p>
+    </div>
 
-  <!-- Coș -->
-  <div id="cart-container" style="display:none;">
-    <h2>Coșul tău</h2>
-    <ul id="cart-items"></ul>
-    <p>Total: <span id="cart-total">0</span> RON</p>
-    <button id="close-cart">Închide</button>
-  </div>
+    <!-- Căutare + filtre -->
+    <div class="filter-container">
+        <input type="text" id="search" placeholder="Caută produse...">
+        <select id="category-filter">
+            <option value="All">Toate categoriile</option>
+            <option value="Telefoane">Telefoane</option>
+            <option value="Laptopuri">Laptopuri</option>
+            <option value="Accesorii">Accesorii</option>
+            <option value="Tablete">Tablete</option>
+            <option value="Televizoare">Televizoare</option>
+        </select>
+        <select id="sort-filter">
+            <option value="none">Sortare</option>
+            <option value="asc">Preț crescător</option>
+            <option value="desc">Preț descrescător</option>
+        </select>
+    </div>
 
-  <footer>
-    &copy; 2025 Mini eMag | Toate drepturile rezervate
-  </footer>
+    <!-- Produse -->
+    <div class="container">
+        <div class="products" id="products">
+            <!-- Produsele se încarcă din Firestore -->
+        </div>
+    </div>
 
-<script>
-  // Config Firebase
-  const firebaseConfig = {
-    apiKey: "AIzaSyB8IUYlmq4kceZhC3gp6e8Mk9G7eLzrYvM",
-    authDomain: "minimag-7ad90.firebaseapp.com",
-    projectId: "minimag-7ad90",
-    storageBucket: "minimag-7ad90.firebasestorage.app",
-    messagingSenderId: "685055029064",
-    appId: "1:685055029064:web:8e2fe8f8b689245dd24d7d",
-    measurementId: "G-SCMXR51H2G"
-  };
+    <!-- Container coș -->
+    <div id="cart-container" class="cart-container" style="display:none;">
+        <h2>Coșul tău</h2>
+        <ul id="cart-items"></ul>
+        <p>Total: <span id="cart-total">0</span> RON</p>
+        <button id="close-cart">Închide</button>
+    </div>
 
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.firestore();
+    <footer>
+        &copy; 2025 Mini eMag | Toate drepturile rezervate
+    </footer>
 
-  const emailInput = document.getElementById('email');
-  const passwordInput = document.getElementById('password');
-  const status = document.getElementById('auth-status');
-  const productsDiv = document.getElementById('products');
-  const cartItemsUl = document.getElementById('cart-items');
-  const cartTotalSpan = document.getElementById('cart-total');
-  let cart = [];
-
-  // Register
-  document.getElementById('register-btn').addEventListener('click', () => {
-    const email = emailInput.value;
-    const password = passwordInput.value;
-    auth.createUserWithEmailAndPassword(email, password)
-      .then(() => status.textContent = "Cont creat și logat!")
-      .catch(err => status.textContent = err.message);
-  });
-
-  // Login
-  document.getElementById('login-btn').addEventListener('click', () => {
-    const email = emailInput.value;
-    const password = passwordInput.value;
-    auth.signInWithEmailAndPassword(email, password)
-      .then(() => status.textContent = "Logat cu succes!")
-      .catch(err => status.textContent = err.message);
-  });
-
-  // Logout
-  document.getElementById('logout-btn').addEventListener('click', () => {
-    auth.signOut().then(() => status.textContent = "Deconectat");
-  });
-
-  // Observă autentificare
-  auth.onAuthStateChanged(user => {
-    status.textContent = user ? `Logat ca: ${user.email}` : "Nu ești logat";
-  });
-
-  // Adaugare produs
-  document.getElementById('add-product-btn').addEventListener('click', () => {
-    const title = prompt("Titlu produs:");
-    const description = prompt("Descriere produs:");
-    const price = parseFloat(prompt("Preț produs:"));
-    const image = prompt("URL imagine:");
-
-    if(title && description && price && image){
-      db.collection('products').add({ title, description, price, image })
-        .then(() => alert("Produs adăugat cu succes!"))
-        .catch(err => alert(err.message));
-    } else alert("Completează toate câmpurile!");
-  });
-
-  // Încarcă produsele în timp real
-  db.collection('products').onSnapshot(snapshot => {
-    productsDiv.innerHTML = '';
-    snapshot.forEach(doc => {
-      const p = doc.data();
-      const card = document.createElement('div');
-      card.className = "product-card";
-      card.innerHTML = `
-        <img src="${p.image}" alt="${p.title}" width="150">
-        <h3>${p.title}</h3>
-        <p>${p.description}</p>
-        <p>${p.price} RON</p>
-        <button onclick="addToCart('${p.title}', ${p.price})">Adaugă în coș</button>
-      `;
-      productsDiv.appendChild(card);
-    });
-  });
-
-  // Coș de cumpărături
-  function addToCart(title, price){
-    cart.push({ title, price });
-    updateCart();
-  }
-
-  function updateCart(){
-    cartItemsUl.innerHTML = '';
-    let total = 0;
-    cart.forEach(item => {
-      total += item.price;
-      const li = document.createElement('li');
-      li.textContent = `${item.title} - ${item.price} RON`;
-      cartItemsUl.appendChild(li);
-    });
-    cartTotalSpan.textContent = total;
-  }
-
-  document.getElementById('view-cart-btn').addEventListener('click', () => {
-    document.getElementById('cart-container').style.display = 'block';
-  });
-
-  document.getElementById('close-cart').addEventListener('click', () => {
-    document.getElementById('cart-container').style.display = 'none';
-  });
-
-</script>
+    <!-- Script JS -->
+    <script src="script.js"></script>
 </body>
-</html>
+  </html>
