@@ -194,3 +194,11 @@ footer {
     font-weight: bold;
     border-radius: 6px;
         }
+.product-card button:nth-child(5) { /* al doilea buton */
+    background-color: #ff2c2c;
+    margin-top: 5px;
+}
+
+.product-card button:nth-child(5):hover {
+    background-color: #0057ff;
+    }
