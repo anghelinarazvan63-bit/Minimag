@@ -157,17 +157,6 @@ window.toggleDarkMode = function() {
 
 
 // ========================
-// CONTACT VÂNZĂTOR
-// ========================
-function contactSeller(productName) {
-    const message = prompt(`Trimite mesaj vânzătorului pentru produsul: ${productName}`);
-    if(message) {
-        alert(`Mesajul tău a fost trimis: "${message}"\n(Vânzătorul va fi notificat)`);
-    }
-}
-window.contactSeller = contactSeller;
-
-// ========================
 // PRODUSE DEMO
 // ========================
 const demoProducts = [
