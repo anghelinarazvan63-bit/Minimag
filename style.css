@@ -162,3 +162,6 @@ nav .nav-links a:hover {
 .auth-container button:hover, .add-product-form button:hover {
     background-color: #0056b3;
    }
+body {
+    background: red !important;
+   }
