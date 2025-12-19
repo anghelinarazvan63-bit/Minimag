@@ -3,18 +3,22 @@
 // ========================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-analytics.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+import { 
+    getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut 
+} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+import { 
+    getFirestore, collection, addDoc, onSnapshot, query, orderBy 
+} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 
 // Config Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyB8IUYlmq4kceZhC3gp6e8Mk9G7eLzrYvM",
-  authDomain: "minimag-7ad90.firebaseapp.com",
-  projectId: "minimag-7ad90",
-  storageBucket: "minimag-7ad90.firebasestorage.app",
-  messagingSenderId: "685055029064",
-  appId: "1:685055029064:web:8e2fe8f8b689245dd24d7d",
-  measurementId: "G-SCMXR51H2G"
+    apiKey: "AIzaSyB8IUYlmq4kceZhC3gp6e8Mk9G7eLzrYvM",
+    authDomain: "minimag-7ad90.firebaseapp.com",
+    projectId: "minimag-7ad90",
+    storageBucket: "minimag-7ad90.firebasestorage.app",
+    messagingSenderId: "685055029064",
+    appId: "1:685055029064:web:8e2fe8f8b689245dd24d7d",
+    measurementId: "G-SCMXR51H2G"
 };
 
 // Initialize Firebase
@@ -31,13 +35,13 @@ const productsCol = collection(db, 'products');
 const q = query(productsCol, orderBy('timestamp', 'desc'));
 
 // Afișare produse în timp real
-<a onSnapshot(q, snapshot => {
+onSnapshot(q, snapshot => {
     productsDiv.innerHTML = '';
     snapshot.forEach(doc => {
         const data = doc.data();
         const card = `
         <div class="product-card">
-  <span class="badge-new">NOU</span>
+            <span class="badge-new">NOU</span>
             <img src="${data.image}" alt="${data.title}">
             <h3>${data.title}</h3>
             <p class="product-desc">${data.description || ''}</p>
@@ -45,7 +49,6 @@ const q = query(productsCol, orderBy('timestamp', 'desc'));
             <button onclick="addToCart('${data.title}', ${data.price})">Adaugă în coș</button>
             <button onclick="contactSeller('${data.title}')">Contactează vânzătorul</button>
         </div>`;
-      <a/>
         productsDiv.innerHTML += card;
     });
 });
@@ -89,7 +92,9 @@ window.addProduct = async function() {
     if(title && description && price && image){
         await addDoc(productsCol, {title, description, price, image, timestamp: new Date()});
         alert('Produs adăugat cu succes!');
-    } else { alert('Completează toate câmpurile!'); }
+    } else { 
+        alert('Completează toate câmpurile!'); 
+    }
 }
 
 // ========================
@@ -101,18 +106,23 @@ window.addToCart = function(title, price){
     const item = document.createElement('li');
     item.textContent = `${title} - ${price} RON`;
     cartItems.appendChild(item);
-    cartTotal.textContent = parseFloat(cartTotal.textContent) + price;
+    cartTotal.textContent = (parseFloat(cartTotal.textContent) + price).toFixed(2);
 }
 document.getElementById('view-cart-btn').onclick = function(){
     document.getElementById('cart-container').style.display = 'block';
 }
 document.getElementById('close-cart').onclick = function(){
     document.getElementById('cart-container').style.display = 'none';
-  }
+}
+
+// ========================
+// CONTACT VÂNZĂTOR
+// ========================
 function contactSeller(productName) {
     const message = prompt(`Trimite mesaj vânzătorului pentru produsul: ${productName}`);
     if(message) {
         alert(`Mesajul tău a fost trimis: "${message}"\n(Vânzătorul va fi notificat)`);
         // Aici poți conecta Firebase sau email mai târziu
     }
-      }
+}
+window.contactSeller = contactSeller;
