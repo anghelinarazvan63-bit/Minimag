@@ -1,215 +1,128 @@
-
+/* GENERAL */
 body {
-    font-family: Arial, sans-serif;
     margin: 0;
-    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #007bff; /* albastru */
     color: #000; /* text negru */
-    background-color: #f0f0f0; /* gri deschis */
-    background-image: url('https://www.google.com/search?q=poza+de+iarna&client=ms-android-xiaomi-terr1-rso2&hs=QVf9&sca_esv=1f0bb9d93a692111&sxsrf=AE3TifPxg5r4w_ll34HKqau3FvvkeEoo8Q%3A1766088988432&ei=HGFEaZ2NGtLy7M8Pv_yZ8Qo&oq=poza+de+iarna&gs_lp=EhNtb2JpbGUtZ3dzLXdpei1zZXJwIg1wb3phIGRlIGlhcm5hMgUQABiABDIGEAAYFhgeMgYQABgWGB4yBhAAGBYYHjIGEAAYFhgeMgYQABgWGB4yBhAAGBYYHjIGEAAYFhgeSPpmUJYNWIFhcAh4AZABA5gBsAGgAbQhqgEFMjUuMTi4AQPIAQD4AQGYAhugAsEXqAIewgIKEAAYsAMY1gQYR8ICDRAAGIAEGLADGEMYigXCAgcQIxiwAhgnwgIMEAAYExgFGAoYDRgewgIKEAAYExgIGA0YHsICBxAhGKABGArCAggQABiABBiiBMICBRAAGO8FwgIHECMYJxjqAsICDRAjGPAFGCcYyQIY6gLCAgcQLhgnGOoCwgIKECMY8AUYJxjqAsICChAjGIAEGCcYigXCAgsQLhiABBjRAxjHAcICChAjGPAFGCcYyQLCAgQQIxgnwgIKEAAYgAQYQxiKBcICChAuGIAEGEMYigXCAhAQIxjwBRiABBgnGMkCGIoFwgIFECEYoAGYAzHxBRVp-TSTpPodiAYBkAYJkgcGOS4xNy4xoAfMvgKyBwYyLjE2LjG4B9gVwgcKMy02LjE2LjQuMcgH7AaACAA&sclient=mobile-gws-wiz-serp#sv=CAMSXhoyKhBlLUhlUzhmMmd0OUlJOE5NMg5IZVM4ZjJndDlJSThOTToOLVkxM3BOeHNURHdmZU0gBCokCg51LTFqb2pDYWh4TnV4TRIQZS1IZVM4ZjJndDlJSThOTRgAMAEYByDHjfP8AzABSgoIAhACGAIgAigC'); /* poza ta de iarnă/Moș Crăciun */
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed; /* rămâne fix la scroll */
 }
 
-/* Overlay semi-transparent ca textul să fie vizibil */
-body::before {
-    content: '';
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background-color: rgba(255, 255, 255, 0.3);
-    pointer-events: none;
+/* CONTAINER GENERAL */
+.container {
+    background-color: #f2f2f2; /* gri deschis */
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
-/* Navbar */
+/* PRODUCT CARD */
+.product-card {
+    background-color: #fff;
+    width: 48%; /* două coloane */
+    margin-bottom: 20px;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.product-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.product-card h3 {
+    margin: 10px 0 5px 0;
+}
+
+.product-card p {
+    margin: 5px 0;
+}
+
+/* NAVBAR */
 nav {
-    background-color: #1E90FF; /* albastru Mini eMag */
-    padding: 15px 30px;
+    background-color: #0056b3;
+    color: #fff;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #fff;
+    padding: 10px 20px;
 }
 
 nav .logo {
-    font-weight: bold;
     font-size: 24px;
+    font-weight: bold;
 }
 
 nav .nav-links a {
-    margin-right: 20px;
-    text-decoration: none;
     color: #fff;
-    font-weight: 500;
+    margin-left: 15px;
+    text-decoration: none;
 }
 
 nav .nav-links a:hover {
     text-decoration: underline;
 }
 
-nav .cart {
-    font-weight: 500;
-}
-
-button {
-    padding: 6px 12px;
-    border: none;
-    border-radius: 5px;
-    background-color: #0f70d0;
-    color: #fff;
-    transition: 0.2s ease;
-}
-
-button:hover {
-    background-color: #094a8b;
-    cursor: pointer;
-    transform: scale(1.05);
-}
-
-/* Banner */
+/* BANNER */
 .banner {
-    background: #1E90FF;
-    color: #fff;
-    padding: 50px 20px;
     text-align: center;
+    padding: 40px 20px;
+    background: url('https://images.unsplash.com/photo-1601924582971-724eb2d2ebff?auto=format&fit=crop&w=1350&q=80') no-repeat center;
+    background-size: cover;
+    color: #fff;
 }
 
-/* Filtre */
+.banner h1 {
+    margin: 0 0 10px 0;
+    font-size: 36px;
+}
+
+.banner p {
+    font-size: 18px;
+}
+
+/* FILTRE */
 .filter-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
+    justify-content: space-between;
     padding: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
-.filter-container input, .filter-container select {
-    padding: 6px 10px;
+.filter-container input,
+.filter-container select {
+    padding: 8px;
     border-radius: 5px;
     border: 1px solid #ccc;
 }
 
-/* Container produse */
-.container {
+/* ADD PRODUCT */
+.add-product-container {
     padding: 20px;
 }
 
-/* Grid produse - două coloane */
-.products {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
+.add-product-container input[type=file] {
+    padding: 5px;
 }
 
-/* Card produs */
-.product-card {
-    background-color: #fff;
-    border-radius: 12px;
-    padding: 10px;
-    text-align: center;
-    position: relative;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeIn 0.5s forwards;
-}
-
-.product-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-}
-
-.product-card img {
-    width: 100%;
-    height: 180px;
-    object-fit: contain;
-    margin-bottom: 10px;
-    border-radius: 10px;
-}
-
-.product-card .price {
-    font-weight: bold;
-    margin: 10px 0;
-}
-
-/* Badge */
-.badge {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background-color: red;
-    color: #fff;
-    padding: 3px 6px;
-    font-size: 12px;
-    border-radius: 5px;
-}
-
-/* Animatie fade-in */
-@keyframes fadeIn {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Coș */
-.cart-container {
-    position: fixed;
-    top: 80px;
-    right: 20px;
-    background-color: #fff;
-    border-radius: 10px;
-    padding: 15px;
-    width: 250px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    z-index: 1000;
-}
-
-#cart-items {
-    list-style: none;
-    padding: 0;
-    max-height: 200px;
-    overflow-y: auto;
-    margin-bottom: 10px;
-}
-
-#cart-items li {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 5px;
-}
-
-#cart-items li button {
-    background-color: red;
-    padding: 2px 5px;
-    border-radius: 3px;
-}
-
-/* Footer */
+/* FOOTER */
 footer {
     text-align: center;
     padding: 20px;
-    background-color: #e0e0e0;
-    color: #000;
+    background-color: #0056b3;
+    color: #fff;
     margin-top: 20px;
 }
 
-/* ------------------- */
-/* Responsive          */
-/* ------------------- */
-@media (max-width: 800px) {
-    .products {
-        grid-template-columns: 1fr;
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .product-card {
+        width: 100%;
     }
-}
 
-@media (max-width: 600px) {
     .filter-container {
         flex-direction: column;
-        gap: 10px;
     }
-    .product-card img {
-        height: 150px;
-    }
-}
+                               }
