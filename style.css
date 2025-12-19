@@ -1,122 +1,192 @@
-/* GENERAL */
-body {
+/* ---------- Reset și font ---------- */
+* {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #007bff; /* albastru */
-    color: #000; /* text negru */
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
 }
 
-/* CONTAINER GENERAL */
-.container {
-    background-color: #f2f2f2; /* gri deschis */
-    padding: 20px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px; /* spațiu între carduri */
+body {
+    background-color: #e6f0fa; /* albastru deschis */
+    color: #000;
 }
 
-/* PRODUCT CARD */
-.product-card {
-    background-color: #fff;
-    border-radius: 10px;
-    padding: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
-
-.product-card img {
-    width: 100%;
-    height: auto;
-    border-radius: 5px;
-}
-
-.product-card h3 {
-    margin: 10px 0 5px 0;
-}
-
-.product-card p {
-    margin: 5px 0;
-}
-
-/* NAVBAR */
+/* ---------- Navbar ---------- */
 nav {
-    background-color: #0056b3;
-    color: #fff;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
+    background-color: #0d47a1; /* albastru navbar */
+    padding: 1rem 2rem;
+    color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 nav .logo {
-    font-size: 24px;
+    font-size: 1.8rem;
     font-weight: bold;
 }
 
 nav .nav-links a {
+    margin-left: 1.5rem;
     color: #fff;
-    margin-left: 15px;
     text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
 }
 
 nav .nav-links a:hover {
-    text-decoration: underline;
+    color: #ff9800; /* portocaliu la hover */
 }
 
-/* BANNER */
-.banner {
-    text-align: center;
-    padding: 40px 20px;
-    background: url('https://images.unsplash.com/photo-1601924582971-724eb2d2ebff?auto=format&fit=crop&w=1350&q=80') no-repeat center;
-    background-size: cover;
+nav .cart button {
+    margin-left: 0.5rem;
+    padding: 0.3rem 0.6rem;
+    background-color: #ff9800;
+    border: none;
     color: #fff;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+nav .cart button:hover {
+    background-color: #e68900;
+}
+
+/* ---------- Banner ---------- */
+.banner {
+    background-image: url('https://images.unsplash.com/photo-1609986487411-7e5fa52c8b10?auto=format&fit=crop&w=1500&q=80'); /* imagine de iarna/Moș Crăciun */
+    background-size: cover;
+    background-position: center;
+    padding: 5rem 2rem;
+    text-align: center;
+    color: #fff;
+    text-shadow: 1px 1px 5px #000;
 }
 
 .banner h1 {
-    margin: 0 0 10px 0;
-    font-size: 36px;
+    font-size: 3rem;
+    margin-bottom: 1rem;
 }
 
 .banner p {
-    font-size: 18px;
+    font-size: 1.3rem;
 }
 
-/* FILTRE */
+/* ---------- Filtre ---------- */
 .filter-container {
     display: flex;
-    justify-content: space-between;
-    padding: 20px;
+    justify-content: center;
+    gap: 1rem;
+    margin: 2rem 0;
     flex-wrap: wrap;
-    gap: 10px;
 }
 
 .filter-container input,
 .filter-container select {
-    padding: 8px;
-    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
     border: 1px solid #ccc;
+    font-size: 1rem;
 }
 
-/* ADD PRODUCT */
-.add-product-container {
-    padding: 20px;
+/* ---------- Container produse ---------- */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
 }
 
-.add-product-container input[type=file] {
-    padding: 5px;
+/* ---------- Grid produse ---------- */
+.products {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
 }
 
-/* FOOTER */
+/* ---------- Card produs ---------- */
+.product-card {
+    background-color: #f5f5f5; /* gri deschis */
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0,0,0,0.2);
+}
+
+.product-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
+.product-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.product-card .price {
+    font-weight: bold;
+    color: #0d47a1;
+    margin-bottom: 0.5rem;
+}
+
+.product-card button {
+    padding: 0.5rem 1rem;
+    background-color: #ff9800;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.3s;
+}
+
+.product-card button:hover {
+    background-color: #e68900;
+}
+
+/* ---------- Coș ---------- */
+.cart-container {
+    position: fixed;
+    top: 5%;
+    right: 2%;
+    width: 300px;
+    background: #f5f5f5;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+    z-index: 200;
+}
+
+/* ---------- Footer ---------- */
 footer {
     text-align: center;
-    padding: 20px;
-    background-color: #0056b3;
+    padding: 1.5rem 0;
+    background-color: #0d47a1;
     color: #fff;
-    margin-top: 20px;
+    margin-top: 2rem;
 }
 
-/* RESPONSIVE */
+/* ---------- Responsive ---------- */
 @media (max-width: 768px) {
+    .banner h1 {
+        font-size: 2rem;
+    }
+    .banner p {
+        font-size: 1rem;
+    }
     .filter-container {
         flex-direction: column;
+        align-items: center;
     }
     }
