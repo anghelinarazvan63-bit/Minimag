@@ -1,118 +1,117 @@
-// ---------- Firestore & Auth ----------
-// Trebuie să ai deja Firebase configurat în index.html
-const db = firebase.firestore();
+// Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyB8IUYlmq4kceZhC3gp6e8Mk9G7eLzrYvM",
+  authDomain: "minimag-7ad90.firebaseapp.com",
+  projectId: "minimag-7ad90",
+  storageBucket: "minimag-7ad90.firebasestorage.app",
+  messagingSenderId: "685055029064",
+  appId: "1:685055029064:web:8e2fe8f8b689245dd24d7d",
+  measurementId: "G-SCMXR51H2G"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
-const storage = firebase.storage();
+const db = firebase.firestore();
 
+// Elemente DOM
+const loginBtn = document.getElementById('login-btn');
+const signupBtn = document.getElementById('signup-btn');
+const logoutBtn = document.getElementById('logout-btn');
+const addProductBtn = document.getElementById('add-product-btn');
 const productsDiv = document.getElementById('products');
-const searchInput = document.getElementById('search');
-const categoryFilter = document.getElementById('category-filter');
-const sortFilter = document.getElementById('sort-filter');
+const addProductContainer = document.getElementById('add-product-container');
 
-// ---------- Coș ----------
-let cart = [];
-const cartItems = document.getElementById('cart-items');
-const cartTotal = document.getElementById('cart-total');
-const cartCount = document.getElementById('cart-count');
-const cartContainer = document.getElementById('cart-container');
+// LOGIN
+loginBtn?.addEventListener('click', () => {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    auth.signInWithEmailAndPassword(email, password)
+        .then(() => alert('Autentificat!'))
+        .catch(err => alert(err.message));
+});
 
-document.getElementById('view-cart-btn').onclick = () => {
-    cartContainer.style.display = 'block';
-};
-document.getElementById('close-cart').onclick = () => {
-    cartContainer.style.display = 'none';
-};
+// SIGNUP
+signupBtn?.addEventListener('click', () => {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    auth.createUserWithEmailAndPassword(email, password)
+        .then(userCredential => {
+            const uid = userCredential.user.uid;
+            db.collection('users').doc(uid).set({
+                isPremium: false,
+                freeProducts: 5
+            });
+            alert('Cont creat!');
+        })
+        .catch(err => alert(err.message));
+});
 
-// ---------- Adaugă în coș ----------
-function addToCart(title, price) {
-    const existing = cart.find(item => item.title === title);
-    if(existing){
-        existing.qty += 1;
+// LOGOUT
+logoutBtn?.addEventListener('click', () => {
+    auth.signOut();
+});
+
+// Observare stare autentificare
+auth.onAuthStateChanged(user => {
+    if(user){
+        addProductContainer.style.display = 'block';
+        logoutBtn.style.display = 'inline';
+        loginBtn.style.display = 'none';
+        signupBtn.style.display = 'none';
     } else {
-        cart.push({title, price, qty: 1});
+        addProductContainer.style.display = 'none';
+        logoutBtn.style.display = 'none';
+        loginBtn.style.display = 'inline';
+        signupBtn.style.display = 'inline';
     }
-    updateCartUI();
-}
+});
 
-function updateCartUI(){
-    cartItems.innerHTML = '';
-    let total = 0;
-    cart.forEach(item => {
-        const li = document.createElement('li');
-        li.textContent = `${item.title} x${item.qty} - ${item.price*item.qty} RON`;
-        cartItems.appendChild(li);
-        total += item.price * item.qty;
-    });
-    cartTotal.textContent = total;
-    cartCount.textContent = cart.reduce((a,b)=>a+b.qty,0);
-}
-
-// ---------- Încarcă produse în timp real ----------
-function loadProducts(){
-    db.collection('products').onSnapshot(snapshot => {
-        let products = [];
-        snapshot.forEach(doc => {
-            const data = doc.data();
-            data.id = doc.id;
-            products.push(data);
-        });
-        displayProducts(products);
-    });
-}
-
-// ---------- Filtrare, căutare și sortare ----------
-function displayProducts(products){
-    // Filtrare categorie
-    const category = categoryFilter.value;
-    if(category !== "All") products = products.filter(p => p.category === category);
-
-    // Căutare
-    const search = searchInput.value.toLowerCase();
-    if(search) products = products.filter(p => p.title.toLowerCase().includes(search));
-
-    // Sortare
-    const sort = sortFilter.value;
-    if(sort === 'asc') products.sort((a,b)=>a.price-b.price);
-    if(sort === 'desc') products.sort((a,b)=>b.price-a.price);
-
-    // Afișare
+// Încarcă produsele live
+db.collection('products').orderBy('timestamp','desc').onSnapshot(snapshot => {
     productsDiv.innerHTML = '';
-    products.forEach(p => {
-        const card = document.createElement('div');
-        card.className = 'product-card';
-        card.innerHTML = `
-            <img src="${p.image}" alt="${p.title}">
-            <h3>${p.title}</h3>
-            <p class="product-desc">${p.description || ''}</p>
-            <p class="price">${p.price} RON</p>
-            <button onclick="addToCart('${p.title}', ${p.price})">Adaugă în coș</button>
-        `;
-        productsDiv.appendChild(card);
+    snapshot.forEach(doc => {
+        const data = doc.data();
+        const card = `
+        <div class="product-card" data-category="${data.category || ''}" data-price="${data.price}">
+            <img src="${data.image}" alt="${data.title}">
+            <h3>${data.title}</h3>
+            <p class="product-desc">${data.description || ''}</p>
+            <p class="price">${data.price} RON</p>
+        </div>`;
+        productsDiv.innerHTML += card;
     });
-}
+});
 
-// ---------- Input filtre ----------
-searchInput.addEventListener('input', loadProducts);
-categoryFilter.addEventListener('change', loadProducts);
-sortFilter.addEventListener('change', loadProducts);
+// Adaugă produs
+addProductBtn?.addEventListener('click', async () => {
+    const title = document.getElementById('prod-title').value;
+    const description = document.getElementById('prod-desc').value;
+    const price = parseFloat(document.getElementById('prod-price').value);
+    const image = document.getElementById('prod-image').value;
+    const user = auth.currentUser;
 
-// ---------- Adaugă produs nou ----------
-function addProduct() {
-    const title = prompt("Titlu produs:");
-    const description = prompt("Descriere produs:");
-    const price = parseFloat(prompt("Preț produs:"));
-    const category = prompt("Categorie produs:");
-    const image = prompt("URL imagine:");
+    if(!user) return alert('Trebuie să fii logat!');
 
-    if(title && description && price && image && category){
-        db.collection('products').add({
-            title, description, price, category, image
-        }).then(() => alert('Produs adăugat cu succes!'))
-          .catch(err => alert(err));
-    } else {
-        alert('Completează toate câmpurile!');
+    const userDoc = await db.collection('users').doc(user.uid).get();
+    const userData = userDoc.data();
+
+    // Verifică limita produselor gratuite
+    if(!userData.isPremium && userData.freeProducts <= 0){
+        return alert('Ai atins limita produselor gratuite. Devii premium pentru mai multe.');
     }
-}
 
-// ---------- Inițializare ----------
-loadProducts();
+    await db.collection('products').add({
+        title, description, price, image,
+        sellerId: user.uid,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    if(!userData.isPremium){
+        db.collection('users').doc(user.uid).update({
+            freeProducts: userData.freeProducts - 1
+        });
+    }
+
+    alert('Produs adăugat cu succes!');
+});
