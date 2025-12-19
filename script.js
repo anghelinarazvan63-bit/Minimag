@@ -1,81 +1,71 @@
-let cart = [];
+// FIREBASE
+const auth = firebase.auth();
+const db = firebase.firestore();
 
-function addToCart(productName, price) {
-    cart.push({name: productName, price: price});
-    document.getElementById('cart-count').innerText = cart.length;
-    updateCartDisplay();
+// Mesaj autentificare
+function msg(text){
+    document.getElementById("auth-msg").innerText = text;
 }
 
-function updateCartDisplay() {
-    const cartItems = document.getElementById('cart-items');
-    cartItems.innerHTML = '';
-    let total = 0;
-    cart.forEach((item, index) => {
-        total += item.price;
-        cartItems.innerHTML += `<li>${item.name} - ${item.price} RON 
-        <button onclick="removeFromCart(${index})">X</button></li>`;
-    });
-    document.getElementById('cart-total').innerText = total;
+// REGISTER
+function register() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    auth.createUserWithEmailAndPassword(email, password)
+        .then(() => msg("Cont creat ✔"))
+        .catch(e => msg(e.message));
 }
 
-function removeFromCart(index) {
-    cart.splice(index, 1);
-    document.getElementById('cart-count').innerText = cart.length;
-    updateCartDisplay();
+// LOGIN
+function login() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    auth.signInWithEmailAndPassword(email, password)
+        .then(() => msg("Logat ✔"))
+        .catch(e => msg(e.message));
 }
 
-// Buton Vezi coș
-document.getElementById('view-cart-btn').addEventListener('click', () => {
-    document.getElementById('cart-container').style.display = 'block';
+// USER LOGAT
+auth.onAuthStateChanged(user => {
+    if(user){
+        document.getElementById("addBtn").style.display = "block";
+        loadProducts();
+    }
 });
 
-// Buton Închide coș
-document.getElementById('close-cart').addEventListener('click', () => {
-    document.getElementById('cart-container').style.display = 'none';
-});
+// ADAUGĂ PRODUS
+function addProduct() {
+    const title = prompt("Titlu produs:");
+    const price = prompt("Preț:");
+    const image = prompt("URL imagine:");
 
-// Căutare produse
-const searchInput = document.getElementById('search');
-searchInput.addEventListener('input', function() {
-    const filter = searchInput.value.toLowerCase();
-    const products = document.querySelectorAll('.product-card');
-    products.forEach(product => {
-        const title = product.querySelector('h3').innerText.toLowerCase();
-        if(title.includes(filter)) {
-            product.style.display = '';
-        } else {
-            product.style.display = 'none';
-        }
+    const user = auth.currentUser;
+    if(!user) return alert("Nu ești logat");
+
+    db.collection("products").add({
+        title,
+        price,
+        image,
+        userId: user.uid
+    }).then(() => alert("Anunț adăugat ✔"));
+}
+
+// ÎNCARCĂ TOATE PRODUSELE
+function loadProducts() {
+    db.collection("products").onSnapshot(snapshot => {
+        const div = document.getElementById("products");
+        div.innerHTML = "";
+        snapshot.forEach(doc => {
+            const p = doc.data();
+            div.innerHTML += `
+                <div class="product-card">
+                    <img src="${p.image}">
+                    <h3>${p.title}</h3>
+                    <p>${p.price} RON</p>
+                </div>
+            `;
+        });
     });
-});
-// Filtrare pe categorii
-const categoryFilter = document.getElementById('category-filter');
-categoryFilter.addEventListener('change', function() {
-    const category = categoryFilter.value;
-    const products = document.querySelectorAll('.product-card');
-    products.forEach(product => {
-        if(category === "All" || product.dataset.category === category) {
-            product.style.display = '';
-        } else {
-            product.style.display = 'none';
-        }
-    });
-});
-
-// Sortare după preț
-const sortFilter = document.getElementById('sort-filter');
-sortFilter.addEventListener('change', function() {
-    const productsContainer = document.getElementById('products');
-    const products = Array.from(productsContainer.children);
-    const sortType = sortFilter.value;
-
-    products.sort((a, b) => {
-        const priceA = parseInt(a.dataset.price);
-        const priceB = parseInt(b.dataset.price);
-        if(sortType === 'asc') return priceA - priceB;
-        if(sortType === 'desc') return priceB - priceA;
-        return 0;
-    });
-
-    products.forEach(product => productsContainer.appendChild(product));
-});
+            }
