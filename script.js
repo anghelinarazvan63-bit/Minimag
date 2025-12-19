@@ -43,6 +43,7 @@ onSnapshot(q, snapshot => {
             <p class="product-desc">${data.description || ''}</p>
             <p class="price">${data.price} RON</p>
             <button onclick="addToCart('${data.title}', ${data.price})">Adaugă în coș</button>
+            <button onclick="contactSeller('${data.title}')">Contactează vânzătorul</button>
         </div>`;
         productsDiv.innerHTML += card;
     });
