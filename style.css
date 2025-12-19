@@ -182,3 +182,15 @@ footer {
     padding: 15px;
     margin-top: 40px;
 }
+/* BADGE NOU */
+.badge-new {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #ff2c2c;
+    color: white;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 6px;
+        }
