@@ -48,7 +48,17 @@
         <p>Cele mai bune produse la un click distanță</p>
     </div>
 
-    <!-- Formular adaugare produs -->
+    <!-- Formular autentificare -->
+    <div class="auth-form">
+        <h2>Autentificare / Înregistrare</h2>
+        <input type="email" id="auth-email" placeholder="Email">
+        <input type="password" id="auth-password" placeholder="Parolă">
+        <button id="login-btn">Login</button>
+        <button id="register-btn">Înregistrează-te</button>
+        <p id="auth-msg"></p>
+    </div>
+
+    <!-- Formular adaugare produs (doar vizibil dacă ești logat) -->
     <div class="add-product-form">
         <h2>Adaugă un produs</h2>
         <input type="text" id="new-title" placeholder="Titlu produs">
@@ -96,12 +106,48 @@
 
     <!-- Script JS -->
     <script>
-    // ---------- Elemente ----------
-    const productsDiv = document.getElementById('products');
-    const searchInput = document.getElementById('search');
-    const categoryFilter = document.getElementById('category-filter');
-    const sortFilter = document.getElementById('sort-filter');
-    const addBtn = document.getElementById('add-product-btn');
+    // ---------- Autentificare ----------
+    const loginBtn = document.getElementById('login-btn');
+    const registerBtn = document.getElementById('register-btn');
+    const authEmail = document.getElementById('auth-email');
+    const authPassword = document.getElementById('auth-password');
+    const authMsg = document.getElementById('auth-msg');
+
+    registerBtn.addEventListener('click', () => {
+        const email = authEmail.value.trim();
+        const password = authPassword.value.trim();
+        if(email && password){
+            auth.createUserWithEmailAndPassword(email, password)
+            .then(() => {
+                authMsg.textContent = 'Înregistrare reușită!';
+                authMsg.style.color = 'green';
+            })
+            .catch(err => authMsg.textContent = err.message);
+        } else authMsg.textContent = 'Completează toate câmpurile!';
+    });
+
+    loginBtn.addEventListener('click', () => {
+        const email = authEmail.value.trim();
+        const password = authPassword.value.trim();
+        if(email && password){
+            auth.signInWithEmailAndPassword(email, password)
+            .then(() => {
+                authMsg.textContent = 'Login reușit!';
+                authMsg.style.color = 'green';
+            })
+            .catch(err => authMsg.textContent = err.message);
+        } else authMsg.textContent = 'Completează toate câmpurile!';
+    });
+
+    auth.onAuthStateChanged(user => {
+        if(user){
+            document.querySelector('.auth-form').style.display = 'none';
+            document.querySelector('.add-product-form').style.display = 'block';
+        } else {
+            document.querySelector('.auth-form').style.display = 'block';
+            document.querySelector('.add-product-form').style.display = 'none';
+        }
+    });
 
     // ---------- Coș ----------
     let cart = [];
@@ -110,20 +156,13 @@
     const cartCount = document.getElementById('cart-count');
     const cartContainer = document.getElementById('cart-container');
 
-    document.getElementById('view-cart-btn').onclick = () => {
-        cartContainer.style.display = 'block';
-    };
-    document.getElementById('close-cart').onclick = () => {
-        cartContainer.style.display = 'none';
-    };
+    document.getElementById('view-cart-btn').onclick = () => cartContainer.style.display = 'block';
+    document.getElementById('close-cart').onclick = () => cartContainer.style.display = 'none';
 
-    function addToCart(title, price) {
+    function addToCart(title, price){
         const existing = cart.find(item => item.title === title);
-        if(existing){
-            existing.qty += 1;
-        } else {
-            cart.push({title, price, qty: 1});
-        }
+        if(existing){ existing.qty += 1; }
+        else { cart.push({title, price, qty:1}); }
         updateCartUI();
     }
 
@@ -134,17 +173,23 @@
             const li = document.createElement('li');
             li.textContent = `${item.title} x${item.qty} - ${item.price*item.qty} RON`;
             cartItems.appendChild(li);
-            total += item.price * item.qty;
+            total += item.price*item.qty;
         });
         cartTotal.textContent = total;
         cartCount.textContent = cart.reduce((a,b)=>a+b.qty,0);
     }
 
-    // ---------- Încarcă produse ----------
+    // ---------- Produse ----------
+    const productsDiv = document.getElementById('products');
+    const searchInput = document.getElementById('search');
+    const categoryFilter = document.getElementById('category-filter');
+    const sortFilter = document.getElementById('sort-filter');
+    const addBtn = document.getElementById('add-product-btn');
+
     function loadProducts(){
-        db.collection('products').onSnapshot(snapshot => {
+        db.collection('products').onSnapshot(snapshot=>{
             let products = [];
-            snapshot.forEach(doc => {
+            snapshot.forEach(doc=>{
                 const data = doc.data();
                 data.id = doc.id;
                 products.push(data);
@@ -154,25 +199,21 @@
     }
 
     function displayProducts(products){
-        // Filtrare categorie
         const category = categoryFilter.value;
-        if(category !== "All") products = products.filter(p => p.category === category);
+        if(category !== "All") products = products.filter(p=>p.category===category);
 
-        // Căutare
         const search = searchInput.value.toLowerCase();
-        if(search) products = products.filter(p => p.title.toLowerCase().includes(search));
+        if(search) products = products.filter(p=>p.title.toLowerCase().includes(search));
 
-        // Sortare
         const sort = sortFilter.value;
-        if(sort === 'asc') products.sort((a,b)=>a.price-b.price);
-        if(sort === 'desc') products.sort((a,b)=>b.price-a.price);
+        if(sort==='asc') products.sort((a,b)=>a.price-b.price);
+        if(sort==='desc') products.sort((a,b)=>b.price-a.price);
 
-        // Afișare
-        productsDiv.innerHTML = '';
-        products.forEach(p => {
+        productsDiv.innerHTML='';
+        products.forEach(p=>{
             const card = document.createElement('div');
-            card.className = 'product-card';
-            card.innerHTML = `
+            card.className='product-card';
+            card.innerHTML=`
                 <img src="${p.image}" alt="${p.title}">
                 <h3>${p.title}</h3>
                 <p class="product-desc">${p.description || ''}</p>
@@ -183,13 +224,11 @@
         });
     }
 
-    // ---------- Input filtre ----------
     searchInput.addEventListener('input', loadProducts);
     categoryFilter.addEventListener('change', loadProducts);
     sortFilter.addEventListener('change', loadProducts);
 
-    // ---------- Adaugă produs ----------
-    addBtn.addEventListener('click', () => {
+    addBtn.addEventListener('click', ()=>{
         const title = document.getElementById('new-title').value.trim();
         const price = parseFloat(document.getElementById('new-price').value);
         const description = document.getElementById('new-description').value.trim();
@@ -197,23 +236,20 @@
         const image = document.getElementById('new-image').value.trim();
 
         if(title && !isNaN(price) && description && category && image){
-            db.collection('products').add({
-                title, price, description, category, image
-            }).then(() => {
+            db.collection('products').add({title, price, description, category, image})
+            .then(()=>{
                 alert('Produs adăugat cu succes!');
-                document.getElementById('new-title').value = '';
-                document.getElementById('new-price').value = '';
-                document.getElementById('new-description').value = '';
-                document.getElementById('new-category').value = '';
-                document.getElementById('new-image').value = '';
-            }).catch(err => alert(err));
-        } else {
-            alert('Completează toate câmpurile corect!');
-        }
+                document.getElementById('new-title').value='';
+                document.getElementById('new-price').value='';
+                document.getElementById('new-description').value='';
+                document.getElementById('new-category').value='';
+                document.getElementById('new-image').value='';
+            })
+            .catch(err=>alert(err));
+        } else alert('Completează toate câmpurile corect!');
     });
 
-    // ---------- Init ----------
     loadProducts();
     </script>
 </body>
-    </html>
+</html>
