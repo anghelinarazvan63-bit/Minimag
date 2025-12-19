@@ -1,74 +1,118 @@
-<!-- Firebase + JS -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script>
-    // Configurația proiectului tău Firebase
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MiniMag</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- AUTH -->
+  <div class="auth-box">
+    <h2>Autentificare</h2>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Parolă">
+    <button onclick="register()">Înregistrare</button>
+    <button onclick="login()">Login</button>
+    <p id="auth-msg"></p>
+  </div>
+
+  <button id="addBtn" onclick="addProduct()" style="display:none;">
+    ➕ Adaugă anunț
+  </button>
+
+  <h1>Produse</h1>
+  <div id="products" class="products"></div>
+
+  <!-- FIREBASE -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    // CONFIG FIREBASE (AL TĂU)
     const firebaseConfig = {
-        apiKey: "AIzaSyB8IUYlmq4kceZhC3gp6e8Mk9G7eLzrYvM",
-        authDomain: "minimag-7ad90.firebaseapp.com",
-        projectId: "minimag-7ad90",
-        storageBucket: "minimag-7ad90.firebasestorage.app",
-        messagingSenderId: "685055029064",
-        appId: "1:685055029064:web:8e2fe8f8b689245dd24d7d",
-        measurementId: "G-SCMXR51H2G"
+      apiKey: "AIzaSyB8IUYlmq4kceZhC3gp6e8Mk9G7eLzrYvM",
+      authDomain: "minimag-7ad90.firebaseapp.com",
+      projectId: "minimag-7ad90",
+      storageBucket: "minimag-7ad90.firebasestorage.app",
+      messagingSenderId: "685055029064",
+      appId: "1:685055029064:web:8e2fe8f8b689245dd24d7d"
     };
 
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
+
+    const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // Încarcă produsele în timp real
-    const productsDiv = document.getElementById('products');
-    db.collection('products').onSnapshot(snapshot => {
-        productsDiv.innerHTML = '';
-        snapshot.forEach(doc => {
-            const data = doc.data();
-            const card = `
-                <div class="product-card">
-                    <img src="${data.image}" alt="${data.title}">
-                    <h3>${data.title}</h3>
-                    <p class="product-desc">${data.description || ''}</p>
-                    <p class="price">${data.price} RON</p>
-                    <button onclick="addToCart('${data.title}', ${data.price})">Adaugă în coș</button>
-                </div>
-            `;
-            productsDiv.innerHTML += card;
-        });
+    // REGISTER
+    function register() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      auth.createUserWithEmailAndPassword(email, password)
+        .then(() => msg("Cont creat ✔"))
+        .catch(e => msg(e.message));
+    }
+
+    // LOGIN
+    function login() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      auth.signInWithEmailAndPassword(email, password)
+        .then(() => msg("Logat ✔"))
+        .catch(e => msg(e.message));
+    }
+
+    function msg(text){
+      document.getElementById("auth-msg").innerText = text;
+    }
+
+    // USER LOGAT
+    auth.onAuthStateChanged(user => {
+      if(user){
+        document.getElementById("addBtn").style.display = "block";
+        loadProducts();
+      }
     });
 
-    // Funcție pentru a adăuga produse
-    function addProduct() {
-        const title = document.getElementById('title').value;
-        const description = document.getElementById('description').value;
-        const price = parseFloat(document.getElementById('price').value);
-        const image = document.getElementById('image').value;
+    // ADAUGĂ PRODUS
+    function addProduct(){
+      const title = prompt("Titlu produs:");
+      const price = prompt("Preț:");
+      const image = prompt("URL imagine:");
 
-        if(title && description && price && image){
-            db.collection('products').add({ title, description, price, image })
-              .then(() => alert('Produs adăugat cu succes!'))
-              .catch(err => alert(err));
-        } else {
-            alert('Completează toate câmpurile!');
-        }
+      const user = auth.currentUser;
+      if(!user) return alert("Nu ești logat");
+
+      db.collection("products").add({
+        title,
+        price,
+        image,
+        userId: user.uid
+      }).then(() => alert("Anunț adăugat ✔"));
     }
 
-    // Coș simplu
-    let cart = [];
-    function addToCart(title, price) {
-        cart.push({ title, price });
-        document.getElementById('cart-count').innerText = cart.length;
-        renderCart();
-    }
-    function renderCart() {
-        const cartItems = document.getElementById('cart-items');
-        cartItems.innerHTML = '';
-        let total = 0;
-        cart.forEach(item => {
-            cartItems.innerHTML += `<li>${item.title} - ${item.price} RON</li>`;
-            total += item.price;
+    // ÎNCARCĂ PRODUSE
+    function loadProducts(){
+      db.collection("products").onSnapshot(snapshot => {
+        const div = document.getElementById("products");
+        div.innerHTML = "";
+        snapshot.forEach(doc => {
+          const p = doc.data();
+          div.innerHTML += `
+            <div class="product-card">
+              <img src="${p.image}">
+              <h3>${p.title}</h3>
+              <p>${p.price} RON</p>
+            </div>
+          `;
         });
-        document.getElementById('cart-total').innerText = total;
+      });
     }
-    document.getElementById('view-cart-btn').onclick = () => document.getElementById('cart-container').style.display = 'block';
-    document.getElementById('close-cart').onclick = () => document.getElementById('cart-container').style.display = 'none';
-</script>
+  </script>
+
+</body>
+</html>
