@@ -6,6 +6,27 @@
     <title>Mini eMag</title>
     <link rel="stylesheet" href="style.css">
 </head>
+    // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyB8IUYlmq4kceZhC3gp6e8Mk9G7eLzrYvM",
+  authDomain: "minimag-7ad90.firebaseapp.com",
+  projectId: "minimag-7ad90",
+  storageBucket: "minimag-7ad90.firebasestorage.app",
+  messagingSenderId: "685055029064",
+  appId: "1:685055029064:web:8e2fe8f8b689245dd24d7d",
+  measurementId: "G-SCMXR51H2G"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 <body>
     <div id="cart-container" class="cart-container" style="display:none;">
     <h2>Coșul tău</h2>
