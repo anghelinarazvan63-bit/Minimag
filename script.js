@@ -154,3 +154,36 @@ window.contactSeller = contactSeller;
 window.toggleDarkMode = function() {
     document.body.classList.toggle('dark-mode');
     }
+
+
+// ========================
+// CONTACT VÂNZĂTOR
+// ========================
+function contactSeller(productName) {
+    const message = prompt(`Trimite mesaj vânzătorului pentru produsul: ${productName}`);
+    if(message) {
+        alert(`Mesajul tău a fost trimis: "${message}"\n(Vânzătorul va fi notificat)`);
+    }
+}
+window.contactSeller = contactSeller;
+
+// ========================
+// PRODUSE DEMO
+// ========================
+const demoProducts = [
+    // lista celor 10 produse demo (telefoane, laptopuri, TV, căști)
+];
+
+demoProducts.forEach(prod => {
+    const card = `
+        <div class="product-card">
+            <span class="badge-new">NOU</span>
+            <img src="${prod.image}" alt="${prod.title}">
+            <h3>${prod.title}</h3>
+            <p class="product-desc">${prod.description}</p>
+            <p class="price">${prod.price} RON</p>
+            <button onclick="addToCart('${prod.title}', ${prod.price})">Adaugă în coș</button>
+            <button onclick="contactSeller('${prod.title}')">Contactează vânzătorul</button>
+        </div>`;
+    productsDiv.innerHTML += card;
+});
