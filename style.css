@@ -25,8 +25,10 @@ nav {
 .logo {
     font-size: 26px;
     font-weight: bold;
-    color: #ff2c2c;
 }
+
+.logo span.mini { color: #0057ff; }
+.logo span.mag { color: #ff2c2c; }
 
 .nav-links {
     display: flex;
@@ -53,6 +55,7 @@ button {
     padding: 8px 14px;
     cursor: pointer;
     font-weight: bold;
+    transition: all 0.3s ease;
 }
 
 button:hover {
@@ -119,6 +122,7 @@ button:hover {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 20px;
+    position: relative;
 }
 
 /* CARD PRODUS */
@@ -127,14 +131,16 @@ button:hover {
     border-radius: 14px;
     padding: 15px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-    transition: transform 0.2s;
+    transition: transform 0.2s, box-shadow 0.3s;
     display: flex;
     flex-direction: column;
     gap: 10px;
+    position: relative;
 }
 
 .product-card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.18);
 }
 
 .product-card img {
@@ -182,6 +188,7 @@ footer {
     padding: 15px;
     margin-top: 40px;
 }
+
 /* BADGE NOU */
 .badge-new {
     position: absolute;
@@ -193,12 +200,28 @@ footer {
     font-size: 12px;
     font-weight: bold;
     border-radius: 6px;
-        }
-.product-card button:nth-child(5) { /* al doilea buton */
-    background-color: #ff2c2c;
+}
+
+/* BUTOANE CARD PRODUS */
+.product-card button {
     margin-top: 5px;
+    transition: all 0.3s ease;
+}
+
+.product-card button:nth-child(5) { /* Adaugă în coș */
+    background-color: #0057ff;
 }
 
 .product-card button:nth-child(5):hover {
+    background-color: #ff2c2c;
+    color: white;
+}
+
+.product-card button:nth-child(6) { /* Contact vânzător */
+    background-color: #ff2c2c;
+}
+
+.product-card button:nth-child(6):hover {
     background-color: #0057ff;
-    }
+    color: white;
+}
