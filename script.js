@@ -37,6 +37,7 @@ onSnapshot(q, snapshot => {
         const data = doc.data();
         const card = `
         <div class="product-card">
+  <span class="badge-new">NOU</span>
             <img src="${data.image}" alt="${data.title}">
             <h3>${data.title}</h3>
             <p class="product-desc">${data.description || ''}</p>
