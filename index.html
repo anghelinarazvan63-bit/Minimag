@@ -90,5 +90,39 @@
 
     <!-- FIREBASE -->
     <script type="module" src="script.js"></script>
+
+    <!-- ANIMAȚII SUPLIMENTARE ȘI HOVER BUTOANE -->
+    <script>
+        // Functie pentru animatie la aparitia cardurilor
+        function animateProductCards() {
+            const productCards = document.querySelectorAll('.product-card');
+            productCards.forEach((card, index) => {
+                card.style.opacity = 0;
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = 1;
+                    card.style.transform = 'translateY(0)';
+                }, index * 150); // animatie stagger
+            });
+        }
+
+        // Apelare la incarcare si dupa adaugarea produselor
+        window.addEventListener('DOMContentLoaded', animateProductCards);
+        const observer = new MutationObserver(animateProductCards);
+        observer.observe(document.getElementById('products'), { childList: true });
+
+        // Hover suplimentar pentru butoanele din carduri
+        const observeButtons = () => {
+            const buttons = document.querySelectorAll('.product-card button');
+            buttons.forEach(btn => {
+                btn.addEventListener('mouseenter', () => { btn.style.transform = 'scale(1.05)'; });
+                btn.addEventListener('mouseleave', () => { btn.style.transform = 'scale(1)'; });
+            });
+        }
+        window.addEventListener('DOMContentLoaded', observeButtons);
+        const btnObserver = new MutationObserver(observeButtons);
+        btnObserver.observe(document.getElementById('products'), { childList: true });
+    </script>
 </body>
-    </html>
+        </html>
