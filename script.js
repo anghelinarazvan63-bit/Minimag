@@ -34,13 +34,14 @@ const productsDiv = document.getElementById('products');
 const productsCol = collection(db, 'products');
 const q = query(productsCol, orderBy('timestamp', 'desc'));
 
-// Afișare produse în timp real
+// Afișare produse în timp real cu animație fade-in
 onSnapshot(q, snapshot => {
     productsDiv.innerHTML = '';
     snapshot.forEach(doc => {
         const data = doc.data();
-        const card = `
-        <div class="product-card">
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
             <span class="badge-new">NOU</span>
             <img src="${data.image}" alt="${data.title}">
             <h3>${data.title}</h3>
@@ -48,8 +49,11 @@ onSnapshot(q, snapshot => {
             <p class="price">${data.price} RON</p>
             <button onclick="addToCart('${data.title}', ${data.price})">Adaugă în coș</button>
             <button onclick="contactSeller('${data.title}')">Contactează vânzătorul</button>
-        </div>`;
-        productsDiv.innerHTML += card;
+        `;
+        card.style.opacity = 0;
+        productsDiv.appendChild(card);
+        // Fade-in animat
+        setTimeout(() => { card.style.opacity = 1; card.style.transition = 'opacity 0.6s ease, transform 0.3s ease'; }, 50);
     });
 });
 
@@ -62,6 +66,8 @@ window.signupUser = async function() {
     try {
         await createUserWithEmailAndPassword(auth, email, password);
         alert('Cont creat cu succes!');
+        document.getElementById('email').value = '';
+        document.getElementById('password').value = '';
     } catch(e) { alert(e.message); }
 }
 
@@ -71,6 +77,8 @@ window.loginUser = async function() {
     try {
         await signInWithEmailAndPassword(auth, email, password);
         alert('Te-ai logat cu succes!');
+        document.getElementById('email').value = '';
+        document.getElementById('password').value = '';
     } catch(e) { alert(e.message); }
 }
 
@@ -107,12 +115,26 @@ window.addToCart = function(title, price){
     item.textContent = `${title} - ${price} RON`;
     cartItems.appendChild(item);
     cartTotal.textContent = (parseFloat(cartTotal.textContent) + price).toFixed(2);
+
+    // Animație adăugare produs în coș
+    item.style.transform = 'translateX(100px)';
+    item.style.opacity = 0;
+    setTimeout(() => {
+        item.style.transition = 'transform 0.4s ease, opacity 0.4s ease';
+        item.style.transform = 'translateX(0)';
+        item.style.opacity = 1;
+    }, 50);
 }
+
+// Coș show/hide cu tranziție
+const cartContainer = document.getElementById('cart-container');
 document.getElementById('view-cart-btn').onclick = function(){
-    document.getElementById('cart-container').style.display = 'block';
+    cartContainer.classList.add('show');
+    cartContainer.classList.remove('hide');
 }
 document.getElementById('close-cart').onclick = function(){
-    document.getElementById('cart-container').style.display = 'none';
+    cartContainer.classList.remove('show');
+    cartContainer.classList.add('hide');
 }
 
 // ========================
@@ -122,7 +144,13 @@ function contactSeller(productName) {
     const message = prompt(`Trimite mesaj vânzătorului pentru produsul: ${productName}`);
     if(message) {
         alert(`Mesajul tău a fost trimis: "${message}"\n(Vânzătorul va fi notificat)`);
-        // Aici poți conecta Firebase sau email mai târziu
     }
 }
 window.contactSeller = contactSeller;
+
+// ========================
+// DARK MODE (opțional)
+// ========================
+window.toggleDarkMode = function() {
+    document.body.classList.toggle('dark-mode');
+    }
